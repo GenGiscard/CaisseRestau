@@ -833,7 +833,7 @@ var A={
   cat:function(d){ui.cat=d.id;render()},
   item:function(d){
     var it=itemOf(d.id);if(!it)return;
-    if(it.variantes||it.opts||it.formule||it.unite){ui.sheet={type:'item',id:it.id,sel:{},v:null,qty:(it.unite&&curT()&&curT().couverts)?curT().couverts:1,note:''};render();return}
+    if(it.variantes||it.opts||it.formule){ui.sheet={type:'item',id:it.id,sel:{},v:null,qty:1,note:''};render();return}
     addLine(it,{prix:it.prix,qty:1});
   },
   selVar:function(d){ui.sheet.v=parseInt(d.i,10);render()},
