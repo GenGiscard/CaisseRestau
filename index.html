@@ -236,6 +236,12 @@ h2:first-child{margin-top:4px}
 .loading .b2{font-family:var(--serif);font-style:italic;font-size:34px;color:var(--ink)}
 
 @media (max-width:760px){.tables{grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}.tbl{min-height:92px;padding:10px}.tbl .n{font-size:30px}}
+.item .it-sub{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.25}
+/* journée */
+.daybar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--paper);border-radius:12px;box-shadow:var(--shadow);padding:10px 14px;margin-top:12px}
+.daybar.off{background:var(--warn-soft);color:var(--warn);box-shadow:none}
+.daybar .btn{min-height:42px;padding:8px 14px}
+.db-btns{display:flex;gap:8px;flex-wrap:wrap}
 /* plats prêts */
 .tbl.occ.ready{background:var(--ready);border-color:var(--ready);color:var(--ready-ink);animation:rdy 1.6s ease-in-out 3}
 .tbl.occ.ready .pp{background:var(--ready-ink);color:var(--ready);font-weight:700}
@@ -273,7 +279,11 @@ var CARTE_ORIGINE={
     {id:'planches',nom:'Planches'},{id:'entrees',nom:'Entr\u00e9es'},{id:'viandes',nom:'Viandes'},
     {id:'vege',nom:'V\u00e9g\u00e9tarien'},{id:'poissons',nom:'Poissons'},{id:'paellas',nom:'Paellas'},
     {id:'fromages',nom:'Fromages'},{id:'desserts',nom:'Desserts'},{id:'formule',nom:'Formule'},
-    {id:'boissons',nom:'Boissons',horsCuisine:true}
+    {id:'champagnes',nom:'Champagnes',horsCuisine:true},{id:'vins-blancs',nom:'Vins blancs',horsCuisine:true},
+    {id:'vins-roses',nom:'Vins ros\u00e9s',horsCuisine:true},{id:'vins-rouges',nom:'Vins rouges',horsCuisine:true},
+    {id:'aperitifs',nom:'Ap\u00e9ritifs',horsCuisine:true},{id:'bieres',nom:'Bi\u00e8res',horsCuisine:true},{id:'softs',nom:'Sans alcool',horsCuisine:true},
+    {id:'digestifs',nom:'Digestifs',horsCuisine:true},{id:'cafes',nom:'Caf\u00e9s & th\u00e9s',horsCuisine:true},
+    {id:'boissons',nom:'Autres boissons',horsCuisine:true}
   ],
   items:[
     {id:'pl-terre',cat:'planches',nom:'La planche de la terre',prix:900,unite:'/ pers.',all:'9 \u00b7 10 \u00b7 12'},
@@ -311,7 +321,117 @@ var CARTE_ORIGINE={
       {nom:'Plat',choix:['Pav\u00e9 de saumon','Cassolette de la mer','Vol-au-vent traditionnel','Poulet jaune aux girolles','Mignon de porc tomates s\u00e9ch\u00e9es']},
       {nom:'Dessert',choix:['Surprise mirabelle','Cr\u00e8me br\u00fbl\u00e9e','Fromages de nos r\u00e9gions','Ananas r\u00f4ti']}
     ]}
-  ]
+  ].concat([
+    {id:"bo-coupe-de-champagne-12-cl",cat:"aperitifs",nom:"Coupe de champagne 12 cl \u00b7 Brut, Mailly Grand Cru",prix:1000,tva:20},
+    {id:"bo-coupe-de-champagne-rose-12-cl",cat:"aperitifs",nom:"Coupe de champagne ros\u00e9 12 cl \u00b7 Piper-Heidsieck",prix:1100,tva:20},
+    {id:"bo-kir-royal-12-cl",cat:"aperitifs",nom:"Kir royal 12 cl \u00b7 Champagne",prix:1100,tva:20,opts:[{nom:"Cr\u00e8me",choix:["Cassis", "M\u00fbre", "P\u00eache"]}]},
+    {id:"bo-kir-12-cl",cat:"aperitifs",nom:"Kir 12 cl \u00b7 Vin blanc",prix:500,tva:20,opts:[{nom:"Cr\u00e8me",choix:["Cassis", "M\u00fbre", "P\u00eache"]}]},
+    {id:"bo-pastis-2-cl",cat:"aperitifs",nom:"Pastis 2 cl",prix:400,tva:20,opts:[{nom:"Marque",choix:["Ricard", "Pastis 51"]}]},
+    {id:"bo-martini-5-cl",cat:"aperitifs",nom:"Martini 5 cl",prix:500,tva:20,opts:[{nom:"Martini",choix:["Blanc", "Rouge"]}]},
+    {id:"bo-campari-5-cl",cat:"aperitifs",nom:"Campari 5 cl",prix:500,tva:20,opts:[{nom:"Service",choix:["Nature", "Soda"]}]},
+    {id:"bo-suze-5-cl",cat:"aperitifs",nom:"Suze 5 cl",prix:500,tva:20,opts:[{nom:"Service",choix:["Nature", "Tonic"]}]},
+    {id:"bo-lillet-6-cl",cat:"aperitifs",nom:"Lillet 6 cl \u00b7 Zeste d\u2019orange",prix:600,tva:20,opts:[{nom:"Lillet",choix:["Blanc", "Rouge"]}]},
+    {id:"bo-whisky-4-cl",cat:"aperitifs",nom:"Whisky 4 cl \u00b7 Blend \u00e9cossais",prix:600,tva:20,opts:[{nom:"Service",choix:["Nature", "Coca"]}]},
+    {id:"bo-spritz",cat:"aperitifs",nom:"Spritz \u00b7 Ap\u00e9rol, prosecco, eau gazeuse",prix:800,tva:20},
+    {id:"bo-cocktail-de-la-maison",cat:"aperitifs",nom:"Cocktail de la maison \u00b7 Gin, fleur de sureau, tonic",prix:900,tva:20},
+    {id:"bo-negroni",cat:"aperitifs",nom:"Negroni \u00b7 Gin, Campari, vermouth rouge",prix:900,tva:20},
+    {id:"bo-cocktail-sans-alcool",cat:"softs",nom:"Cocktail sans alcool \u00b7 Gingembre, citron vert, eau p\u00e9tillante",prix:600,tva:10},
+    {id:"bo-biere-pression-25-cl",cat:"bieres",nom:"Bi\u00e8re pression 25 cl \u00b7 Blonde",prix:400,tva:20},
+    {id:"bo-biere-pression-50-cl",cat:"bieres",nom:"Bi\u00e8re pression 50 cl \u00b7 Blonde",prix:700,tva:20},
+    {id:"bo-panache-ou-monaco-25-cl",cat:"bieres",nom:"Panach\u00e9 ou monaco 25 cl",prix:400,tva:20,opts:[{nom:"Boisson",choix:["Panach\u00e9", "Monaco"]}]},
+    {id:"bo-blonde-locale-33-cl",cat:"bieres",nom:"Blonde locale 33 cl \u00b7 Microbrasserie de la r\u00e9gion",prix:600,tva:20},
+    {id:"bo-ipa-33-cl",cat:"bieres",nom:"IPA 33 cl \u00b7 Ar\u00f4mes floraux et agrumes",prix:600,tva:20},
+    {id:"bo-ambree-33-cl",cat:"bieres",nom:"Ambr\u00e9e 33 cl \u00b7 Notes torr\u00e9fi\u00e9es",prix:600,tva:20},
+    {id:"bo-biere-sans-alcool-33-cl",cat:"bieres",nom:"Bi\u00e8re sans alcool 33 cl \u00b7 Blonde",prix:500,tva:10},
+    {id:"bo-eau-plate-50-cl",cat:"softs",nom:"Eau plate 50 cl \u00b7 Evian",prix:400,tva:10},
+    {id:"bo-eau-gazeuse-50-cl",cat:"softs",nom:"Eau gazeuse 50 cl \u00b7 Badoit",prix:400,tva:10},
+    {id:"bo-eau-1-l",cat:"softs",nom:"Eau 1 L \u00b7 Evian ou Badoit",prix:600,tva:10,opts:[{nom:"Eau",choix:["Plate", "Gazeuse"]}]},
+    {id:"bo-sirop-a-leau-25-cl",cat:"softs",nom:"Sirop \u00e0 l\u2019eau 25 cl",prix:250,tva:10,opts:[{nom:"Parfum",choix:["Menthe", "Grenadine", "Fraise", "Citron"]}]},
+    {id:"bo-soda-33-cl",cat:"softs",nom:"Soda 33 cl",prix:400,tva:10,opts:[{nom:"Soda",choix:["Coca-Cola", "Coca-Cola z\u00e9ro", "Orangina", "Schweppes"]}]},
+    {id:"bo-limonade-artisanale-25-cl",cat:"softs",nom:"Limonade artisanale 25 cl \u00b7 Citron",prix:400,tva:10},
+    {id:"bo-tonic-premium-20-cl",cat:"softs",nom:"Tonic premium 20 cl \u00b7 Fever-Tree",prix:500,tva:10},
+    {id:"bo-jus-de-fruits-20-cl",cat:"softs",nom:"Jus de fruits 20 cl \u00b7 Alain Milliat",prix:500,tva:10,opts:[{nom:"Jus",choix:["P\u00eache de vigne", "Tomate", "Pomme"]}]},
+    {id:"bo-mirabelle-de-lorraine-4-cl",cat:"digestifs",nom:"Mirabelle de Lorraine 4 cl \u00b7 Eau-de-vie AOC",prix:700,tva:20},
+    {id:"bo-poire-williams-4-cl",cat:"digestifs",nom:"Poire Williams 4 cl \u00b7 Eau-de-vie",prix:700,tva:20},
+    {id:"bo-framboise-4-cl",cat:"digestifs",nom:"Framboise 4 cl \u00b7 Eau-de-vie",prix:700,tva:20},
+    {id:"bo-calvados-4-cl",cat:"digestifs",nom:"Calvados 4 cl \u00b7 Pays d\u2019Auge",prix:800,tva:20},
+    {id:"bo-rhum-vieux-4-cl",cat:"digestifs",nom:"Rhum vieux 4 cl \u00b7 Diplom\u00e1tico Reserva",prix:800,tva:20},
+    {id:"bo-cognac-vsop-4-cl",cat:"digestifs",nom:"Cognac VSOP 4 cl",prix:900,tva:20,opts:[{nom:"Marque",choix:["Hennessy", "R\u00e9my Martin"]}]},
+    {id:"bo-armagnac-4-cl",cat:"digestifs",nom:"Armagnac 4 cl \u00b7 Bas-Armagnac",prix:900,tva:20},
+    {id:"bo-whisky-single-malt-4-cl",cat:"digestifs",nom:"Whisky single malt 4 cl \u00b7 \u00c9cosse, 12 ans d\u2019\u00e2ge",prix:900,tva:20},
+    {id:"bo-expresso",cat:"cafes",nom:"Expresso \u00b7 Pur arabica",prix:200,tva:10,opts:[{nom:"Caf\u00e9",choix:["Expresso", "D\u00e9caf\u00e9in\u00e9"]}]},
+    {id:"bo-cafe-allonge-ou-creme",cat:"cafes",nom:"Caf\u00e9 allong\u00e9 ou cr\u00e8me \u00b7 Pur arabica",prix:300,tva:10,opts:[{nom:"Caf\u00e9",choix:["Allong\u00e9", "Cr\u00e8me"]}]},
+    {id:"bo-double-expresso",cat:"cafes",nom:"Double expresso \u00b7 Pur arabica",prix:350,tva:10},
+    {id:"bo-the-ou-infusion",cat:"cafes",nom:"Th\u00e9 ou infusion \u00b7 S\u00e9lection de la maison",prix:350,tva:10,opts:[{nom:"Boisson",choix:["Th\u00e9", "Infusion"]}]},
+    {id:"bo-chocolat-chaud",cat:"cafes",nom:"Chocolat chaud \u00b7 Chantilly maison",prix:400,tva:10},
+    {id:"bo-irish-coffee",cat:"cafes",nom:"Irish coffee \u00b7 Whisky, caf\u00e9, cr\u00e8me fouett\u00e9e",prix:900,tva:20},
+    {id:"vin-mailly-grand-cru-brut-grand-cru",cat:"champagnes",nom:"Mailly Grand Cru \u00b7 Brut Grand Cru",prix:8400,tva:20},
+    {id:"vin-beaugrand-extra-brut-le-grand-carre-blan",cat:"champagnes",nom:"Beaugrand \u00b7 Extra Brut, Le Grand Carr\u00e9, Blanc de Blancs",prix:11900,tva:20},
+    {id:"vin-piper-heidsieck-brut-rose",cat:"champagnes",nom:"Piper-Heidsieck \u00b7 Brut ros\u00e9",prix:12600,tva:20},
+    {id:"vin-moet-chandon-brut-imperial",cat:"champagnes",nom:"Mo\u00ebt & Chandon \u00b7 Brut, Imp\u00e9rial",prix:14500,tva:20},
+    {id:"vin-piper-heidsieck-brut-vintage-2018",cat:"champagnes",nom:"Piper-Heidsieck \u00b7 Brut Vintage, 2018",prix:16800,tva:20},
+    {id:"vin-ruinart-brut-r-de-ruinart",cat:"champagnes",nom:"Ruinart \u00b7 Brut, \u00ab R \u00bb de Ruinart",prix:18500,tva:20},
+    {id:"vin-domaine-klipfel-riesling",cat:"vins-blancs",nom:"Riesling \u00b7 Domaine Klipfel",prix:3300,tva:20},
+    {id:"vin-domaine-klipfel-pinot-gris",cat:"vins-blancs",nom:"Pinot Gris \u00b7 Domaine Klipfel",prix:3600,tva:20},
+    {id:"vin-domaine-klipfel-gewurztraminer-vendanges",cat:"vins-blancs",nom:"Gewurztraminer, Vendanges Tardives \u00b7 Domaine Klipfel",prix:10500,tva:20},
+    {id:"vin-ducroux-sancerre",cat:"vins-blancs",nom:"Sancerre \u00b7 Ducroux",prix:5000,tva:20},
+    {id:"vin-domaine-chollet-pouilly-fume",cat:"vins-blancs",nom:"Pouilly-Fum\u00e9 \u00b7 Domaine Chollet",prix:5800,tva:20},
+    {id:"vin-cuvee-gogane-cabernet-d-anjou",cat:"vins-roses",nom:"Cabernet d\u2019Anjou \u00b7 Cuv\u00e9e Gogane",prix:2000,tva:20},
+    {id:"vin-domaine-du-clos-godeaux-chinon",cat:"vins-rouges",nom:"Chinon \u00b7 Domaine du Clos Godeaux",prix:2800,tva:20},
+    {id:"vin-clos-des-morains-saumur-champigny",cat:"vins-rouges",nom:"Saumur-Champigny \u00b7 Clos des Morains",prix:2800,tva:20},
+    {id:"vin-domaine-de-fondis-saint-nicolas-de-bourg",cat:"vins-rouges",nom:"Saint-Nicolas-de-Bourgueil \u00b7 Domaine de Fondis",prix:2900,tva:20},
+    {id:"vin-domaine-passy-le-clou-chablis",cat:"vins-blancs",nom:"Chablis \u00b7 Domaine Passy Le Clou",prix:5700,tva:20},
+    {id:"vin-bourgogne-epineuil-cuvee-4-saisons",cat:"vins-rouges",nom:"Cuv\u00e9e 4 Saisons \u00b7 Bourgogne \u00c9pineuil",prix:4100,tva:20},
+    {id:"vin-bailly-irancy",cat:"vins-rouges",nom:"Irancy \u00b7 Bailly",prix:6000,tva:20},
+    {id:"vin-domaine-piguet-chouet-meursault-anne-mar",cat:"vins-blancs",nom:"Meursault, Anne-Marye, 2024 \u00b7 Domaine Piguet-Chouet",prix:17900,tva:20},
+    {id:"vin-domaine-grachet-duchemin-hautes-cotes-de",cat:"vins-rouges",nom:"Hautes-C\u00f4tes de Beaune, \u00c9mile Grachet \u00b7 Domaine Grachet-Duchemin",prix:5500,tva:20},
+    {id:"vin-denis-chorey-les-beaune-2023",cat:"vins-rouges",nom:"Chorey-l\u00e8s-Beaune, 2023 \u00b7 Denis",prix:8900,tva:20},
+    {id:"vin-chateau-de-pommard-pommard-cuvee-emilie-",cat:"vins-rouges",nom:"Pommard, Cuv\u00e9e \u00c9milie, bio, 2022 \u00b7 Ch\u00e2teau de Pommard",prix:12000,tva:20},
+    {id:"vin-stephane-brocard-aloxe-corton-meuneveaux",cat:"vins-rouges",nom:"Aloxe-Corton, Meuneveaux, 2022 \u00b7 St\u00e9phane Brocard",prix:12800,tva:20},
+    {id:"vin-roblot-marchand-gevrey-chambertin-croix-",cat:"vins-rouges",nom:"Gevrey-Chambertin, Croix des Champs, 2022 \u00b7 Roblot-Marchand",prix:13900,tva:20},
+    {id:"vin-edouard-delaunay-nuits-saint-georges-1er",cat:"vins-rouges",nom:"Nuits-Saint-Georges 1er Cru, Les Crots, bio, 2019 \u00b7 \u00c9douard Delaunay",prix:22600,tva:20},
+    {id:"vin-cave-de-lugny-macon-lugny-les-charmes",cat:"vins-blancs",nom:"M\u00e2con-Lugny, Les Charmes \u00b7 Cave de Lugny",prix:3600,tva:20},
+    {id:"vin-cave-de-prisse-saint-veran-les-sentinell",cat:"vins-blancs",nom:"Saint-V\u00e9ran, Les Sentinelles, 2023 \u00b7 Cave de Priss\u00e9",prix:4600,tva:20},
+    {id:"vin-vignerons-de-buxy-montagny-1er-cru-les-c",cat:"vins-blancs",nom:"Montagny 1er Cru, Les Co\u00e8res, 2022 \u00b7 Vignerons de Buxy",prix:5800,tva:20},
+    {id:"vin-cave-de-prisse-pouilly-fuisse",cat:"vins-blancs",nom:"Pouilly-Fuiss\u00e9 \u00b7 Cave de Priss\u00e9",prix:6300,tva:20},
+    {id:"vin-domaine-michaud-frere-s-ur-rully-la-chau",cat:"vins-blancs",nom:"Rully, La Chaume, 2022 \u00b7 Domaine Michaud Fr\u00e8re & S\u0153ur",prix:6400,tva:20},
+    {id:"vin-cave-de-prisse-macon-chateau-du-charnay",cat:"vins-rouges",nom:"M\u00e2con, Ch\u00e2teau du Charnay \u00b7 Cave de Priss\u00e9",prix:3000,tva:20},
+    {id:"vin-cave-de-buxy-givry-1er-cru-steinmaier-20",cat:"vins-rouges",nom:"Givry 1er Cru, Steinmaier, 2023 \u00b7 Cave de Buxy",prix:7100,tva:20},
+    {id:"vin-domaine-tremeaux-mercurey-1er-cru-les-cr",cat:"vins-rouges",nom:"Mercurey 1er Cru, Les Croichots, 2024 \u00b7 Domaine Tremeaux",prix:7500,tva:20},
+    {id:"vin-jambon-morgon-douby",cat:"vins-rouges",nom:"Morgon, Douby \u00b7 Jambon",prix:3200,tva:20},
+    {id:"vin-jambon-moulin-a-vent-les-bois-combes",cat:"vins-rouges",nom:"Moulin-\u00e0-Vent, Les Bois Combes \u00b7 Jambon",prix:3400,tva:20},
+    {id:"vin-mommessin-julienas-grandes-mises",cat:"vins-rouges",nom:"Juli\u00e9nas, Grandes Mises \u00b7 Mommessin",prix:4000,tva:20},
+    {id:"vin-mommessin-saint-amour-grandes-mises",cat:"vins-rouges",nom:"Saint-Amour, Grandes Mises \u00b7 Mommessin",prix:4500,tva:20},
+    {id:"vin-tardieu-laurent-saint-joseph-les-ramades",cat:"vins-blancs",nom:"Saint-Joseph, Les Ramades \u00b7 Tardieu-Laurent",prix:7800,tva:20},
+    {id:"vin-cuvee-royale-tavel",cat:"vins-roses",nom:"Tavel \u00b7 Cuv\u00e9e Royale",prix:3600,tva:20},
+    {id:"vin-tardieu-laurent-vacqueyras-les-lauzieres",cat:"vins-rouges",nom:"Vacqueyras, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:5800,tva:20},
+    {id:"vin-ogier-crozes-hermitage-l-orientale-les-p",cat:"vins-rouges",nom:"Crozes-Hermitage, L\u2019Orientale, Les Paillanches \u00b7 Ogier",prix:6200,tva:20},
+    {id:"vin-tardieu-laurent-saint-joseph-les-lauzier",cat:"vins-rouges",nom:"Saint-Joseph, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:7800,tva:20},
+    {id:"vin-tardieu-laurent-chateauneuf-du-pape-les-",cat:"vins-rouges",nom:"Ch\u00e2teauneuf-du-Pape, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:12700,tva:20},
+    {id:"vin-tardieu-laurent-cote-rotie-les-lauzieres",cat:"vins-rouges",nom:"C\u00f4te-R\u00f4tie, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:17000,tva:20},
+    {id:"vin-chateau-lauzade-cotes-de-provence-2024",cat:"vins-roses",nom:"C\u00f4tes de Provence, 2024 \u00b7 Ch\u00e2teau Lauzade",prix:3800,tva:20},
+    {id:"vin-moulin-de-la-roque-bandol-les-baumes",cat:"vins-roses",nom:"Bandol, Les Baumes \u00b7 Moulin de la Roque",prix:4600,tva:20},
+    {id:"vin-jardin-de-corbieres-corbieres-bio",cat:"vins-blancs",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1700,tva:20},
+    {id:"vin-jardin-de-corbieres-corbieres-biox",cat:"vins-rouges",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1900,tva:20},
+    {id:"vin-le-mas-du-rollier-terrasses-du-larzac-bi",cat:"vins-rouges",nom:"Terrasses du Larzac, bio \u00b7 Le Mas du Rollier",prix:3300,tva:20},
+    {id:"vin-chateau-d-argens-minervois-chant-de-lune",cat:"vins-rouges",nom:"Minervois, Chant de Lune, biodynamie \u00b7 Ch\u00e2teau d\u2019Argens",prix:3700,tva:20},
+    {id:"vin-colombelle-cotes-de-gascogne-origin",cat:"vins-blancs",nom:"C\u00f4tes de Gascogne, Origin \u00b7 Colombelle",prix:1700,tva:20},
+    {id:"vin-plaimont-pacherenc-du-vic-bilh-moelleux-",cat:"vins-blancs",nom:"Pacherenc du Vic-Bilh moelleux, Collection \u00b7 Plaimont",prix:4100,tva:20},
+    {id:"vin-plaimont-madiran-maestria",cat:"vins-rouges",nom:"Madiran, Maestria \u00b7 Plaimont",prix:2800,tva:20},
+    {id:"vin-la-maldita-rioja-garnacha-blanca",cat:"vins-blancs",nom:"Rioja, Garnacha blanca \u00b7 La Maldita",prix:3000,tva:20},
+    {id:"vin-la-maldita-rioja-garnacha",cat:"vins-roses",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20},
+    {id:"vin-la-maldita-rioja-garnachax",cat:"vins-rouges",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20},
+    {id:"vin-chateau-lamothe-cissac-haut-medoc-cru-bo",cat:"vins-rouges",nom:"Haut-M\u00e9doc, Cru Bourgeois \u00b7 Ch\u00e2teau Lamothe-Cissac",prix:3800,tva:20},
+    {id:"vin-fortin-plaisance-saint-emilion-2023",cat:"vins-rouges",nom:"Saint-\u00c9milion, 2023 \u00b7 Fortin Plaisance",prix:4200,tva:20},
+    {id:"vin-ondulations-cotes-de-bourg",cat:"vins-rouges",nom:"C\u00f4tes de Bourg \u00b7 Ondulations",prix:4300,tva:20},
+    {id:"vin-leo-colombier-brown-pessac-leognan-2021",cat:"vins-rouges",nom:"Pessac-L\u00e9ognan, 2021 \u00b7 L\u00e9o Colombier Brown",prix:7000,tva:20},
+    {id:"vin-heritage-de-le-boscq-saint-estephe",cat:"vins-rouges",nom:"Saint-Est\u00e8phe \u00b7 H\u00e9ritage de Le Boscq",prix:7100,tva:20},
+    {id:"vin-fleur-de-pedesclaux-pauillac",cat:"vins-rouges",nom:"Pauillac \u00b7 Fleur de Pedesclaux",prix:8200,tva:20},
+    {id:"vin-zede-de-labegorce-margaux-2022",cat:"vins-rouges",nom:"Margaux, 2022 \u00b7 Z\u00e8de de Lab\u00e9gorce",prix:9000,tva:20},
+    {id:"vin-goulee-by-cos-d-estournel-medoc-2018",cat:"vins-rouges",nom:"M\u00e9doc, 2018 \u00b7 Goul\u00e9e by Cos d\u2019Estournel",prix:9600,tva:20},
+    {id:"vin-l-aspirant-de-beychevelle-saint-julien-2",cat:"vins-rouges",nom:"Saint-Julien, 2023 \u00b7 L\u2019Aspirant de Beychevelle",prix:10800,tva:20},
+    {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20}
+  ])
 };
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
@@ -333,9 +453,23 @@ var DEVICE=uid();
 
 /* ================= DONNÉES ================= */
 var data={ready:false,err:null,online:null,tables:{},config:null,jours:{}};
-var ui={view:'salle',cur:null,cat:null,sheet:null,showTicket:false,pay:{montant:'',parts:1},rendu:0,recu:null,recuFrom:'salle',jday:dayKey(),reg:null,flash:null,busy:false};
+var ui={ferm:{compte:'',confirm:false},fermDay:null,view:'salle',cur:null,cat:null,sheet:null,showTicket:false,pay:{montant:'',parts:1},rendu:0,recu:null,recuFrom:'salle',jday:dayKey(),reg:null,flash:null,busy:false};
 
-function cfg(){var c=data.config||{};return {nom:c.nom||'Les Jardins du Val d\u2019Ornain',adresse:c.adresse||'',nbTables:c.nbTables||20,carte:c.carte||CARTE_ORIGINE}}
+var _cfgSrc=null,_cfg=null;
+function fusionCarte(k){
+  if(!k)return CARTE_ORIGINE;
+  var sup=toArr(k.supprimes),ids={},cids={},out={cats:k.cats.slice(),items:k.items.slice(),supprimes:sup};
+  out.items.forEach(function(i){ids[i.id]=1});out.cats.forEach(function(c){cids[c.id]=1});
+  CARTE_ORIGINE.cats.forEach(function(c,ix){if(!cids[c.id]){out.cats.splice(Math.min(ix,out.cats.length),0,c);cids[c.id]=1}});
+  CARTE_ORIGINE.items.forEach(function(i){if(!ids[i.id]&&sup.indexOf(i.id)<0)out.items.push(i)});
+  return out;
+}
+function cfg(){
+  if(_cfg&&_cfgSrc===data.config)return _cfg;
+  var c=data.config||{};_cfgSrc=data.config;
+  _cfg={nom:c.nom||'Les Jardins du Val d\u2019Ornain',adresse:c.adresse||'',nbTables:c.nbTables||20,carte:fusionCarte(c.carte)};
+  return _cfg;
+}
 function catOf(id){var cs=cfg().carte.cats;for(var i=0;i<cs.length;i++)if(cs[i].id===id)return cs[i];return null}
 function itemOf(id){var it=cfg().carte.items;for(var i=0;i<it.length;i++)if(it[i].id===id)return it[i];return null}
 
@@ -376,8 +510,8 @@ function normConfig(c){
   return c;
 }
 function normJour(day,v){
-  var tk=v||{},keys=Object.keys(tk).sort();
-  return {day:day,tickets:keys.map(function(k,i){var t=clone(tk[k]);t.key=k;t.num=i+1;t.lignes=toArr(t.lignes);t.tva=toArr(t.tva);t.paiements=toArr(t.paiements);return t})};
+  v=v||{};var tk=v.tickets||{},keys=Object.keys(tk).sort();
+  return {day:day,ouverture:v.ouverture||null,cloture:v.cloture?(function(c){c=clone(c);c.modes=c.modes||{};return c})(v.cloture):null,tickets:keys.map(function(k,i){var t=clone(tk[k]);t.key=k;t.num=i+1;t.lignes=toArr(t.lignes);t.tva=toArr(t.tva);t.paiements=toArr(t.paiements);return t})};
 }
 var Store={
   mir:{tables:null,config:null},over:{},streams:{},pend:{},flushing:{},
@@ -386,7 +520,7 @@ var Store={
     var self=this,got={t:false,c:false};
     this.open('tables','tables',function(v){self.mir.tables=v;got.t=true;if(got.c)data.ready=true;self.derive()});
     this.open('config','config',function(v){self.mir.config=v;got.c=true;if(got.t)data.ready=true;self.derive()});
-    this.watchDay(dayKey());
+    this.watchDay(addDays(dayKey(),-1));this.watchDay(dayKey());
     setTimeout(function(){if(!data.ready){data.err='connexion';data.ready=true;render()}},12000);
   },
   open:function(key,path,cb){
@@ -433,11 +567,12 @@ var Store={
     })();
   },
   watchDay:function(day){
-    var keep=[dayKey(),ui.jday],self=this;
+    var keep=[dayKey(),addDays(dayKey(),-1),ui.jday],self=this;
     Object.keys(this.streams).forEach(function(k){if(k.indexOf('j:')===0&&keep.indexOf(k.slice(2))<0){self.streams[k].close();delete self.streams[k]}});
     if(this.streams['j:'+day])return;
-    this.open('j:'+day,'jours/'+day+'/tickets',function(v){data.jours[day]=normJour(day,v);render()});
+    this.open('j:'+day,'jours/'+day,function(v){data.jours[day]=normJour(day,v);render()});
   },
+  ecrire:async function(path,body){var r=await fetch(this.url(path,'?x-http-method-override=PUT'),{method:'POST',body:JSON.stringify(body)});if(!r.ok)throw new Error(String(r.status))},
   saveTable:function(t){this.put('tables/'+t.id,clone(t))},
   deleteTable:function(id){this.put('tables/'+id,null)},
   saveConfig:function(c){this.put('config',clone(c))},
@@ -490,7 +625,7 @@ function render(){
 function viewAll(){
   if(!data.ready)return '<div class="loading"><span class="b2">Val d\u2019Ornain</span><span>Ouverture de la caisse\u2026</span></div>';
   if(ui.cur&&!data.tables[ui.cur]&&(ui.view==='commande'||ui.view==='encaisser')){ui.view='salle';ui.cur=null;ui.sheet=null}
-  var sub=(ui.view==='commande'||ui.view==='encaisser');
+  var sub=(ui.view==='commande'||ui.view==='encaisser'||ui.view==='fermeture');
   var h=topBar();
   if(data.err==='refus')h+='<div class="alert">Acc\u00e8s refus\u00e9 par Firebase : v\u00e9rifiez les r\u00e8gles de la base.</div>';
   else if(data.err||data.online===false)h+='<div class="alert">Connexion \u00e0 la base interrompue. Les donn\u00e9es reviendront d\u00e8s le retour du r\u00e9seau.</div>';
@@ -502,6 +637,7 @@ function viewAll(){
   else if(ui.view==='cuisine')body=vCuisine();
   else if(ui.view==='journal')body=vJournal();
   else if(ui.view==='reglages')body=vReglages();
+  else if(ui.view==='fermeture')body=vFermeture();
   h+='<main class="'+(ui.view==='commande'?'fixed':'')+'" data-scroll="main-'+ui.view+'">'+body+'</main>';
   if(!sub)h+=bnav();
   if(ui.sheet)h+=vSheet();
@@ -511,7 +647,7 @@ function navBtns(){
   var n=enCuisineCount(),nr=tablesPretes();
   var tabs=[['salle','Salle'],['cuisine','Cuisine'],['journal','Journal'],['reglages','R\u00e9glages']];
   return tabs.map(function(t){
-    var on=ui.view===t[0]||(t[0]==='salle'&&(ui.view==='commande'||ui.view==='encaisser'||(ui.view==='recu'&&ui.recuFrom==='salle')))||(t[0]==='journal'&&ui.view==='recu'&&ui.recuFrom==='journal');
+    var on=ui.view===t[0]||(t[0]==='salle'&&(ui.view==='fermeture'||ui.view==='commande'||ui.view==='encaisser'||(ui.view==='recu'&&ui.recuFrom==='salle')))||(t[0]==='journal'&&ui.view==='recu'&&ui.recuFrom==='journal');
     return '<button class="'+(on?'on':'')+'" data-act="nav" data-v="'+t[0]+'">'+t[1]+(t[0]==='cuisine'&&n?'<span class="badge">'+n+'</span>':'')+(t[0]==='salle'&&nr?'<span class="badge rdy">'+nr+'</span>':'')+'</button>';
   }).join('');
 }
@@ -522,6 +658,53 @@ function topBar(){
 function bnav(){return '<nav class="bnav">'+navBtns()+'</nav>'}
 
 /* ---- Salle ---- */
+function jourInfo(k){return data.jours[k]||null}
+/* journée de service : celle qui est ouverte (un service peut finir après minuit) */
+function jourService(){
+  var t=dayKey(),y=addDays(t,-1),jt=jourInfo(t),jy=jourInfo(y);
+  if(jt&&jt.ouverture)return t;
+  if(jy&&jy.ouverture&&!jy.cloture&&new Date().getHours()<6)return y;
+  return t;
+}
+function especesDuJour(tks){return tks.reduce(function(a,t){return a+t.paiements.filter(function(p){return p.mode==='Esp\u00e8ces'}).reduce(function(b,p){return b+p.montant},0)},0)}
+function vFermeture(){
+  var k=ui.fermDay||jourService(),j=jourInfo(k)||{tickets:[]},tks=jourTickets(k),s=jourStats(tks),cl=j.cloture;
+  var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="salle">Salle</button><div class="ttl">Fermeture de journ\u00e9e</div></div><div class="wrap" style="max-width:820px">';
+  h+='<p class="muted" style="margin-top:0">'+dayLabel(k)+(j.ouverture?' \u00b7 ouverte \u00e0 '+hhmm(j.ouverture.t):'')+(cl?' \u00b7 cl\u00f4tur\u00e9e \u00e0 '+hhmm(cl.t):'')+'</p>';
+  if(!j.ouverture)h+='<div class="confirm" style="margin:0 0 14px">La journ\u00e9e n\u2019a pas \u00e9t\u00e9 ouverte : le fond de caisse est compt\u00e9 \u00e0 0,00\u00a0\u20ac.</div>';
+  if(cl){
+    var apres=tks.length-cl.nbTickets;
+    if(apres>0)h+='<div class="confirm" style="margin:0 0 14px">'+apres+' ticket'+(apres>1?'s':'')+' encaiss\u00e9'+(apres>1?'s':'')+' apr\u00e8s la cl\u00f4ture, non compt\u00e9'+(apres>1?'s':'')+' ci-dessous.</div>';
+    h+=clotureTicket(k,cl)+'<div class="actions"><button class="btn ghost" data-act="imprimer">Imprimer</button><button class="btn pri" data-act="nav" data-v="salle">Retour \u00e0 la salle</button></div></div>';
+    return h;
+  }
+  var ouvertes=Object.keys(data.tables).map(function(x){return data.tables[x]});
+  if(ouvertes.length)h+='<div class="confirm" style="margin:0 0 14px">'+ouvertes.length+' table'+(ouvertes.length>1?'s':'')+' encore ouverte'+(ouvertes.length>1?'s':'')+' ('+eur(ouvertes.reduce(function(a,t){return a+total(t)},0))+'). Encaissez-les avant de cl\u00f4turer.</div>';
+  var fond=j.ouverture?j.ouverture.fond:0,esp=especesDuJour(tks),att=fond+esp,cpt=parseMoney(ui.ferm.compte);
+  h+='<div class="stats"><div class="stat"><b class="num">'+eur(s.ca)+'</b><span>chiffre d\u2019affaires TTC</span></div><div class="stat"><b class="num">'+s.n+'</b><span>tickets</span></div><div class="stat"><b class="num">'+s.couv+'</b><span>couverts</span></div><div class="stat"><b class="num">'+eur(s.remise)+'</b><span>remises</span></div></div>';
+  h+='<div class="jgrid"><div class="card"><b>Esp\u00e8ces</b>'+
+    '<div class="row"><span>Fond de caisse</span><span class="num">'+eur(fond)+'</span></div>'+
+    '<div class="row"><span>Encaiss\u00e9 en esp\u00e8ces</span><span class="num">'+eur(esp)+'</span></div>'+
+    '<div class="row sep"><b>Attendu dans le tiroir</b><b class="num">'+eur(att)+'</b></div>'+
+    '<div class="field" style="margin-top:12px"><label for="f-compte">Esp\u00e8ces compt\u00e9es dans le tiroir</label><input class="inp num" id="f-compte" inputmode="decimal" autocomplete="off" data-bind="ferm.compte" data-live="1" value="'+esc(ui.ferm.compte)+'" placeholder="0,00"></div>';
+  if(cpt!=null){var ec=cpt-att;h+='<div class="row"><b>\u00c9cart</b><b class="num" style="color:'+(ec===0?'var(--sage-ink)':'var(--warn)')+'">'+(ec>0?'+':'')+eur(ec)+'</b></div>'}
+  h+='</div><div class="card"><b>R\u00e8glements</b>';
+  MODES.forEach(function(m){h+='<div class="row"><span>'+m+'</span><span class="num">'+eur(s.modes[m]||0)+'</span></div>'});
+  h+='<div class="row sep"><b>Total</b><b class="num">'+eur(s.ca)+'</b></div></div></div>';
+  if(ui.ferm.confirm)h+='<div class="confirm">La cl\u00f4ture est d\u00e9finitive et ne pourra plus \u00eatre modifi\u00e9e. Continuer ?<div class="foot"><button class="btn ghost" data-act="fermNo">Annuler</button><button class="btn warn" data-act="fermYes" '+(ui.busy?'disabled':'')+'>Cl\u00f4turer la journ\u00e9e</button></div></div>';
+  else h+='<div class="actions"><button class="btn pri" data-act="fermAsk" '+(cpt==null?'disabled':'')+'>Cl\u00f4turer la journ\u00e9e</button></div>'+(cpt==null?'<p class="small muted" style="text-align:center">Saisissez d\u2019abord les esp\u00e8ces compt\u00e9es.</p>':'');
+  return h+'</div>';
+}
+function clotureTicket(k,cl){
+  var c=cfg();
+  var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div><div class="c">Fermeture de journ\u00e9e</div><hr>';
+  h+='<div class="r"><span>'+dayLabel(k)+'</span></div><div class="r"><span>Cl\u00f4ture</span><span>'+hhmm(cl.t)+'</span></div><hr>';
+  h+='<div class="r"><span>Tickets</span><span>'+cl.nbTickets+'</span></div><div class="r"><span>Couverts</span><span>'+(cl.couverts||0)+'</span></div>';
+  h+='<div class="r tot"><span>CA TTC</span><span>'+eur(cl.ca)+'</span></div><hr>';
+  MODES.forEach(function(m){h+='<div class="r"><span>'+m+'</span><span>'+eur(cl.modes[m]||0)+'</span></div>'});
+  h+='<hr><div class="r"><span>Fond de caisse</span><span>'+eur(cl.fond)+'</span></div><div class="r"><span>Esp\u00e8ces attendues</span><span>'+eur(cl.especesAttendues)+'</span></div><div class="r"><span>Esp\u00e8ces compt\u00e9es</span><span>'+eur(cl.especesComptees)+'</span></div><div class="r tot"><span>\u00c9cart</span><span>'+(cl.ecart>0?'+':'')+eur(cl.ecart)+'</span></div></div>';
+  return h;
+}
 function jourTickets(k){var j=data.jours[k];return j&&Array.isArray(j.tickets)?j.tickets:[]}
 function vSalle(){
   var c=cfg(),ids=Object.keys(data.tables),occ=0,couv=0,cours=0;
@@ -532,6 +715,12 @@ function vSalle(){
     '<div class="stat"><b class="num">'+couv+'</b><span>couverts en salle</span></div>'+
     '<div class="stat"><b class="num">'+eur(cours)+'</b><span>en cours</span></div>'+
     '<div class="stat"><b class="num">'+eur(ca)+'</b><span>encaiss\u00e9 aujourd\u2019hui</span></div></div>';
+  var jk=jourService(),ji=jourInfo(jk);
+  if(ji){
+    if(!ji.ouverture)h+='<div class="daybar off"><span>La journ\u00e9e n\u2019est pas ouverte.</span><button class="btn pri" data-act="sheetOuverture">Ouverture de journ\u00e9e</button></div>';
+    else if(!ji.cloture)h+='<div class="daybar"><span>Journ\u00e9e ouverte \u00e0 '+hhmm(ji.ouverture.t)+' \u00b7 fond de caisse <b class="num">'+eur(ji.ouverture.fond)+'</b></span><span class="db-btns"><button class="btn ghost" data-act="sheetOuverture">Modifier le fond</button><button class="btn pri" data-act="goFermeture">Fermeture de journ\u00e9e</button></span></div>';
+    else h+='<div class="daybar"><span>Journ\u00e9e cl\u00f4tur\u00e9e \u00e0 '+hhmm(ji.cloture.t)+'</span><button class="btn ghost" data-act="goFermeture">Voir la cl\u00f4ture</button></div>';
+  }
   h+='<h2>Salle</h2><div class="tables">';
   for(var i=1;i<=c.nbTables;i++){h+=tile('T'+i,String(i))}
   h+='</div><h2>\u00c0 emporter</h2><div class="tables">';
@@ -565,7 +754,8 @@ function vCommande(){
   var its=c.carte.items.filter(function(i){return i.cat===ui.cat});
   its.forEach(function(it){
     var p=it.variantes?'d\u00e8s '+eur(Math.min.apply(null,it.variantes.map(function(v){return v.prix}))):eur(it.prix);
-    h+='<button class="item '+(ui.flash===it.id?'added':'')+'" data-act="item" data-id="'+it.id+'"><span class="nm">'+esc(it.nom)+'</span><span class="pr"><b class="num">'+p+'</b><span>'+esc(it.unite||'')+'</span></span></button>';
+    var pn=String(it.nom).split(' \u00b7 ');
+    h+='<button class="item '+(ui.flash===it.id?'added':'')+'" data-act="item" data-id="'+it.id+'"><span class="nm">'+esc(pn[0])+'</span>'+(pn.length>1?'<span class="it-sub">'+esc(pn.slice(1).join(' \u00b7 '))+'</span>':'')+'<span class="pr"><b class="num">'+p+'</b><span>'+esc(it.unite||'')+'</span></span></button>';
   });
   h+='<button class="item divers" data-act="sheetDivers">Article libre</button></div>';
   if(!its.length)h+='<p class="empty-cat">Aucun article dans cette cat\u00e9gorie. Ajoutez-les dans R\u00e9glages, ou utilisez un article libre.</p>';
@@ -691,7 +881,16 @@ function vJournal(){
   if(s.remise)h+='<div class="row muted"><span>Remises accord\u00e9es</span><span class="num">'+eur(s.remise)+'</span></div>';
   h+='</div><div class="card"><b>TVA</b><table class="tbl-tva" style="margin-top:8px"><tr><th>Taux</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';
   Object.keys(s.tva).sort(function(a,b){return a-b}).forEach(function(r){var x=s.tva[r];h+='<tr><td>'+tauxTxt(r)+'</td><td class="num">'+eur(x.ht)+'</td><td class="num">'+eur(x.tva)+'</td><td class="num">'+eur(x.ttc)+'</td></tr>'});
-  h+='</table></div></div><h2>Tickets</h2>';
+  h+='</table></div></div>';
+  var ji=jourInfo(k);
+  if(ji&&(ji.ouverture||ji.cloture)){
+    h+='<div class="card" style="margin-top:14px"><b>Journ\u00e9e</b>';
+    if(ji.ouverture)h+='<div class="row"><span>Ouverture \u00e0 '+hhmm(ji.ouverture.t)+' \u00b7 fond de caisse</span><span class="num">'+eur(ji.ouverture.fond)+'</span></div>';
+    if(ji.cloture){var cl=ji.cloture;h+='<div class="row"><span>Cl\u00f4ture \u00e0 '+hhmm(cl.t)+' \u00b7 esp\u00e8ces compt\u00e9es</span><span class="num">'+eur(cl.especesComptees)+'</span></div><div class="row"><span>\u00c9cart de caisse</span><b class="num" style="color:'+(cl.ecart===0?'var(--sage-ink)':'var(--warn)')+'">'+(cl.ecart>0?'+':'')+eur(cl.ecart)+'</b></div>'}
+    else h+='<div class="row muted"><span>Journ\u00e9e non cl\u00f4tur\u00e9e</span></div>';
+    h+='</div>';
+  }
+  h+='<h2>Tickets</h2>';
   if(!tks.length)h+='<p class="muted">Aucun ticket ce jour.</p>';
   else{h+='<div class="card tlist">';tks.slice().reverse().forEach(function(t,i){h+='<button class="ti" data-act="voirTicket" data-i="'+(tks.length-1-i)+'"><span class="muted num">n\u00b0'+t.num+'</span><span class="num">'+hhmm(t.ferme)+'</span><span>'+esc(t.table)+' <span class="muted small">\u00b7 '+t.paiements.map(function(p){return esc(p.mode)}).join(', ')+'</span></span><b class="num">'+eur(t.total)+'</b></button>'});h+='</div>'}
   return h+'</div>';
@@ -789,6 +988,11 @@ function vSheet(){
   }
   else if(s.type==='copie'){
     h='<h3>Copier le journal</h3><div class="sub">S\u00e9lectionnez tout le texte, copiez-le, puis collez-le dans Excel.</div><textarea class="inp num" id="f-copie" rows="8" readonly style="font-size:12px;white-space:pre">'+esc(s.txt)+'</textarea><div class="foot"><button class="btn pri" data-act="closeSheet">Fermer</button></div>';
+  }
+  else if(s.type==='ouverture'){
+    h='<h3>Ouverture de journ\u00e9e</h3><div class="sub">'+dayLabel(jourService())+'</div><div class="field"><label for="f-fond">Fond de caisse (esp\u00e8ces dans le tiroir)</label><input class="inp num" id="f-fond" inputmode="decimal" autocomplete="off" data-bind="sheet.fond" value="'+esc(s.fond)+'" placeholder="0,00"></div>'+
+      (s.err?'<div class="confirm">'+esc(s.err)+'</div>':'')+
+      '<div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn pri" data-act="ouvrir" '+(s.busy?'disabled':'')+'>'+(s.modif?'Enregistrer':'Ouvrir la journ\u00e9e')+'</button></div>';
   }
   else if(s.type==='resetCarte'){
     h='<h3>Carte d\u2019origine</h3><div class="confirm">Toutes vos modifications de la carte (prix, boissons ajout\u00e9es) seront perdues.</div><div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn warn" data-act="resetCarte">R\u00e9tablir</button></div>';
@@ -920,10 +1124,33 @@ var A={
       paiements:(t.payments||[]).map(function(p){return {mode:p.mode,montant:p.montant,recu:p.recu}}),
       rendu:(t.payments||[]).reduce(function(a,p){return a+(p.rendu||0)},0)};
     try{
-      var saved=await Store.appendTicket(dayKey(),tk);
+      var saved=await Store.appendTicket(jourService(),tk);
       var id=t.id;ui.recu=saved;ui.recuFrom='salle';ui.view='recu';ui.cur=null;ui.busy=false;
       Store.deleteTable(id);
     }catch(e){ui.busy=false;toast('Cl\u00f4ture impossible pour le moment, r\u00e9essayez');render()}
+  },
+  sheetOuverture:function(){var ji=jourInfo(jourService());var o=ji&&ji.ouverture;ui.sheet={type:'ouverture',fond:o?csvNum(o.fond):'',modif:!!o,err:'',busy:false};render()},
+  ouvrir:async function(){
+    var s=ui.sheet,f=parseMoney(s.fond);
+    if(f==null||f<0){s.err='Indiquez le montant du fond de caisse (0 si vide).';render();return}
+    var k=jourService(),ji=jourInfo(k),o=ji&&ji.ouverture;
+    s.busy=true;render();
+    try{await Store.ecrire('jours/'+k+'/ouverture',{fond:f,t:o?o.t:Date.now(),maj:Date.now()});ui.sheet=null;toast(o?'Fond de caisse modifi\u00e9':'Journ\u00e9e ouverte');render()}
+    catch(e){s.busy=false;s.err='Enregistrement impossible, v\u00e9rifiez la connexion.';render()}
+  },
+  goFermeture:function(){ui.fermDay=jourService();ui.ferm={compte:'',confirm:false};ui.view='fermeture';ui.sheet=null;render()},
+  fermAsk:function(){ui.ferm.confirm=true;render()},
+  fermNo:function(){ui.ferm.confirm=false;render()},
+  fermYes:async function(){
+    var k=ui.fermDay,j=jourInfo(k)||{},tks=jourTickets(k),s=jourStats(tks),cpt=parseMoney(ui.ferm.compte);
+    if(cpt==null||j.cloture||ui.busy)return;
+    var fond=j.ouverture?j.ouverture.fond:0,att=fond+especesDuJour(tks);
+    var cl={t:Date.now(),fond:fond,especesAttendues:att,especesComptees:cpt,ecart:cpt-att,ca:s.ca,nbTickets:s.n,couverts:s.couv,remises:s.remise,modes:{}};
+    MODES.forEach(function(m){cl.modes[m]=s.modes[m]||0});
+    ui.busy=true;render();
+    try{await Store.ecrire('jours/'+k+'/cloture',cl);toast('Journ\u00e9e cl\u00f4tur\u00e9e')}
+    catch(e){toast('Cl\u00f4ture impossible, v\u00e9rifiez la connexion')}
+    ui.busy=false;ui.ferm.confirm=false;render();
   },
   imprimer:function(){try{window.print()}catch(e){toast('Impression indisponible ici')}},
   kLine:function(d){
@@ -978,7 +1205,7 @@ var A={
   },
   eDel:function(){ui.sheet.confirm=true;render()},
   eDelNo:function(){ui.sheet.confirm=false;render()},
-  eDelYes:function(){var id=ui.sheet.id,carte=clone(cfg().carte);carte.items=carte.items.filter(function(i){return i.id!==id});var c=clone(data.config||{});c.carte=carte;ui.sheet=null;Store.saveConfig(c)},
+  eDelYes:function(){var id=ui.sheet.id,carte=clone(cfg().carte);carte.items=carte.items.filter(function(i){return i.id!==id});carte.supprimes=(carte.supprimes||[]).concat([id]);var c=clone(data.config||{});c.carte=carte;ui.sheet=null;Store.saveConfig(c)},
   sheetResetCarte:function(){ui.sheet={type:'resetCarte'};render()},
   resetCarte:function(){var c=clone(data.config||{});delete c.carte;ui.sheet=null;Store.saveConfig(c);toast('Carte d\u2019origine r\u00e9tablie')},
   closeSheet:function(){ui.sheet=null;render()}
@@ -995,6 +1222,7 @@ document.addEventListener('input',function(e){
   var p=b.split('.'),o=ui;
   for(var i=0;i<p.length-1;i++){o=o[p[i]];if(o==null)return}
   o[p[p.length-1]]=el.value;
+  if(el.dataset.live)render();
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ui.sheet){ui.sheet=null;render()}});
 setInterval(function(){if(!ui.sheet&&(ui.view==='salle'||ui.view==='cuisine'))render()},30000);
