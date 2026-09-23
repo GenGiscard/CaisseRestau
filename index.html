@@ -11,7 +11,7 @@
 :root{
   --bg:#F5F3EC; --paper:#FFFFFF; --ink:#23283F; --ink2:#62667A; --line:#E2DED2;
   --navy:#262B45; --navy-ink:#F3F1EA; --sage:#74844A; --sage-soft:#EBEFDD; --sage-ink:#4E5A2E;
-  --warn:#A94B28; --warn-soft:#F7E6DC; --chip:#EAE6DB; --occ:#262B45; --occ-ink:#F3F1EA;
+  --warn:#A94B28; --warn-soft:#F7E6DC; --chip:#EAE6DB; --occ:#262B45; --occ-ink:#F3F1EA; --ready:#5E8A3A; --ready-ink:#FFFFFF;
   --shadow:0 1px 2px rgba(35,40,63,.07),0 6px 18px rgba(35,40,63,.06);
   --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
   --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -24,14 +24,14 @@
   :root:not([data-theme="light"]){
     --bg:#161927; --paper:#1F2336; --ink:#ECEAE3; --ink2:#A3A7B8; --line:#333852;
     --navy:#0E1120; --navy-ink:#ECEAE3; --sage:#A6B676; --sage-soft:#283020; --sage-ink:#C7D59A;
-    --warn:#E3906B; --warn-soft:#3A251D; --chip:#2A2F46; --occ:#A6B676; --occ-ink:#161927;
+    --warn:#E3906B; --warn-soft:#3A251D; --chip:#2A2F46; --occ:#A6B676; --occ-ink:#161927; --ready:#E3A53C; --ready-ink:#1B1508;
     --shadow:0 1px 2px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
   --bg:#161927; --paper:#1F2336; --ink:#ECEAE3; --ink2:#A3A7B8; --line:#333852;
   --navy:#0E1120; --navy-ink:#ECEAE3; --sage:#A6B676; --sage-soft:#283020; --sage-ink:#C7D59A;
-  --warn:#E3906B; --warn-soft:#3A251D; --chip:#2A2F46; --occ:#A6B676; --occ-ink:#161927;
+  --warn:#E3906B; --warn-soft:#3A251D; --chip:#2A2F46; --occ:#A6B676; --occ-ink:#161927; --ready:#E3A53C; --ready-ink:#1B1508;
   --shadow:0 1px 2px rgba(0,0,0,.3);
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -236,6 +236,14 @@ h2:first-child{margin-top:4px}
 .loading .b2{font-family:var(--serif);font-style:italic;font-size:34px;color:var(--ink)}
 
 @media (max-width:760px){.tables{grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}.tbl{min-height:92px;padding:10px}.tbl .n{font-size:30px}}
+/* plats prêts */
+.tbl.occ.ready{background:var(--ready);border-color:var(--ready);color:var(--ready-ink);animation:rdy 1.6s ease-in-out 3}
+.tbl.occ.ready .pp{background:var(--ready-ink);color:var(--ready);font-weight:700}
+@keyframes rdy{50%{transform:scale(1.04)}}
+.badge.rdy{background:var(--ready);color:var(--ready-ink)}
+.st.rdy{background:var(--ready);color:var(--ready-ink)}
+.ready-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:var(--ready);color:var(--ready-ink)}
+.ready-bar .btn{background:var(--ready-ink);color:var(--ready);min-height:42px;padding:8px 14px}
 /* bouton retour */
 .btn.back{background:var(--navy);color:var(--navy-ink);padding-left:12px;gap:10px}
 .btn.back::before{content:"";width:10px;height:10px;border-left:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(45deg);margin-left:4px}
@@ -465,6 +473,8 @@ function tauxTxt(r){return String(r).replace('.',',')+'\u00a0%'}
 function label(id){var t=data.tables[id];if(t&&t.label)return t.label;if(id.charAt(0)==='T')return 'Table '+id.slice(1);return id}
 function curT(){return ui.cur?data.tables[ui.cur]:null}
 function editT(){var t=curT();return t?clone(t):null}
+function pretsCount(t){return t.lines.reduce(function(a,l){return a+(l.etat==='pret'&&l.cuisine!==false?l.qty:0)},0)}
+function tablesPretes(){return Object.keys(data.tables).filter(function(k){return pretsCount(data.tables[k])>0}).length}
 function enCuisineCount(){var n=0;Object.keys(data.tables).forEach(function(k){(data.tables[k].lines||[]).forEach(function(l){if(l.etat==='envoye')n+=l.qty})});return n}
 
 /* ================= RENDU ================= */
@@ -498,11 +508,11 @@ function viewAll(){
   return h;
 }
 function navBtns(){
-  var n=enCuisineCount();
+  var n=enCuisineCount(),nr=tablesPretes();
   var tabs=[['salle','Salle'],['cuisine','Cuisine'],['journal','Journal'],['reglages','R\u00e9glages']];
   return tabs.map(function(t){
     var on=ui.view===t[0]||(t[0]==='salle'&&(ui.view==='commande'||ui.view==='encaisser'||(ui.view==='recu'&&ui.recuFrom==='salle')))||(t[0]==='journal'&&ui.view==='recu'&&ui.recuFrom==='journal');
-    return '<button class="'+(on?'on':'')+'" data-act="nav" data-v="'+t[0]+'">'+t[1]+(t[0]==='cuisine'&&n?'<span class="badge">'+n+'</span>':'')+'</button>';
+    return '<button class="'+(on?'on':'')+'" data-act="nav" data-v="'+t[0]+'">'+t[1]+(t[0]==='cuisine'&&n?'<span class="badge">'+n+'</span>':'')+(t[0]==='salle'&&nr?'<span class="badge rdy">'+nr+'</span>':'')+'</button>';
   }).join('');
 }
 function topBar(){
@@ -534,8 +544,9 @@ function tile(id,n){
   if(!t)return '<button class="tbl" data-act="table" data-id="'+id+'"><span class="n">'+esc(n)+'</span><span class="l">libre</span></button>';
   var info=(id.charAt(0)==='T'?(t.couverts||0)+' couv. \u00b7 ':'')+duree(t.ouvert);
   var att=t.lines.some(function(l){return l.etat==='attente'});
-  var pp=paye(t)>0?'<span class="pp">acompte '+eur(paye(t))+'</span>':(att?'<span class="pp">\u00e0 envoyer</span>':'');
-  return '<button class="tbl occ" data-act="table" data-id="'+id+'"><span class="n">'+esc(n)+'</span><span class="l">'+info+'</span>'+pp+'<span class="tt num">'+eur(total(t))+'</span></button>';
+  var rd=pretsCount(t);
+  var pp=rd?'<span class="pp">'+rd+' pr\u00eat'+(rd>1?'s':'')+' \u00e0 servir</span>':(paye(t)>0?'<span class="pp">acompte '+eur(paye(t))+'</span>':(att?'<span class="pp">\u00e0 envoyer</span>':''));
+  return '<button class="tbl occ'+(rd?' ready':'')+'" data-act="table" data-id="'+id+'"><span class="n">'+esc(n)+'</span><span class="l">'+info+'</span>'+pp+'<span class="tt num">'+eur(total(t))+'</span></button>';
 }
 
 /* ---- Commande ---- */
@@ -546,6 +557,8 @@ function vCommande(){
   var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="salle">Salle</button><div class="ttl">'+esc(t.label)+'</div>';
   if(t.id.charAt(0)==='T')h+='<button class="btn ghost" data-act="sheetCouverts">'+(t.couverts||0)+' couv.</button>';
   h+='<button class="btn ghost" data-act="sheetOptions">Options</button></div>';
+  var rd=pretsCount(t);
+  if(rd)h+='<div class="ready-bar"><span><b>'+rd+' plat'+(rd>1?'s':'')+' pr\u00eat'+(rd>1?'s':'')+'</b> en cuisine</span><button class="btn" data-act="servir">C\u2019est servi</button></div>';
   h+='<div class="cmd-body"><div class="carte-pane" data-scroll="carte"><div class="cats">';
   cats.forEach(function(ct){h+='<button class="chip '+(ct.id===ui.cat?'on':'')+'" data-act="cat" data-id="'+ct.id+'">'+esc(ct.nom)+'</button>'});
   h+='</div><div class="items">';
@@ -561,7 +574,7 @@ function vCommande(){
   return h;
 }
 function lineHtml(l){
-  var st=l.etat==='envoye'?'<span class="st">en cuisine</span>':(l.etat==='pret'?'<span class="st">pr\u00eat</span>':'');
+  var st=l.etat==='envoye'?'<span class="st">en cuisine</span>':(l.etat==='pret'&&l.cuisine!==false?'<span class="st rdy">pr\u00eat \u00e0 servir</span>':((l.etat==='servi'||l.etat==='pret')?'<span class="st">servi</span>':''));
   return '<button class="ln" data-act="ligne" data-id="'+l.id+'"><span class="q">'+l.qty+'\u00d7</span><span><span class="'+(l.offert?'off':'')+'">'+esc(l.nom)+'</span>'+st+
     (l.detail?'<div class="d">'+esc(l.detail)+'</div>':'')+(l.note?'<div class="nt">'+esc(l.note)+'</div>':'')+
     '</span><span class="num">'+(l.offert?'offert':eur(lt(l)))+'</span></button>';
@@ -876,10 +889,11 @@ var A={
   lDelYes:function(){var t=editT();if(!t)return;var id=ui.sheet.id;t.lines=t.lines.filter(function(l){return l.id!==id});ui.sheet=null;Store.saveTable(t)},
   lSave:function(){var t=editT();if(!t)return;var s=ui.sheet;t.lines.forEach(function(l){if(l.id===s.id){l.qty=s.qty;l.note=(s.note||'').trim();l.offert=s.offert}});ui.sheet=null;Store.saveTable(t)},
   showTicket:function(){ui.showTicket=true;render()},
+  servir:function(){var t=editT();if(!t)return;var now=Date.now();t.lines.forEach(function(l){if(l.etat==='pret'&&l.cuisine!==false){l.etat='servi';l.ts=now}});Store.saveTable(t)},
   hideTicket:function(){ui.showTicket=false;render()},
   envoyer:function(){
     var t=editT();if(!t)return;var now=Date.now(),n=0;
-    t.lines.forEach(function(l){if(l.etat==='attente'){n+=l.qty;l.t=now;if(l.cuisine===false){l.etat='pret';l.tp=now}else l.etat='envoye'}});
+    t.lines.forEach(function(l){if(l.etat==='attente'){n+=l.qty;l.t=now;if(l.cuisine===false){l.etat='servi';l.tp=now}else l.etat='envoye'}});
     if(!n)return;Store.saveTable(t);toast(n+' article'+(n>1?'s':'')+' envoy\u00e9'+(n>1?'s':''));
   },
   encaisser:function(){ui.view='encaisser';ui.showTicket=false;ui.pay={montant:'',parts:1};ui.rendu=0;render()},
