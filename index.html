@@ -236,6 +236,93 @@ h2:first-child{margin-top:4px}
 .loading .b2{font-family:var(--serif);font-style:italic;font-size:34px;color:var(--ink)}
 
 @media (max-width:760px){.tables{grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}.tbl{min-height:92px;padding:10px}.tbl .n{font-size:30px}}
+/* bouton retour */
+.btn.back{background:var(--navy);color:var(--navy-ink);padding-left:12px;gap:10px}
+.btn.back::before{content:"";width:10px;height:10px;border-left:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(45deg);margin-left:4px}
+:root[data-theme="dark"] .btn.back{background:var(--sage);color:var(--occ-ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.back{background:var(--sage);color:var(--occ-ink)}}
+.cmd-head .btn.back{font-size:16px;padding-right:16px}
+/* confort téléphone */
+html{-webkit-text-size-adjust:100%}
+@media (max-width:760px){
+  body{font-size:16.5px}
+  .small{font-size:14.5px}
+  .btn{min-height:52px;font-size:16px}
+  .bnav button{padding:16px 4px;font-size:15px}
+  .top .sync{font-size:13px}
+  .wrap{padding:14px 12px}
+  h2{font-size:28px}
+  .stat{padding:14px}
+  .stat b{font-size:24px}
+  .stat span{font-size:14px}
+  .tables{grid-template-columns:repeat(3,1fr);gap:10px}
+  .tbl{min-height:104px;padding:12px}
+  .tbl .n{font-size:34px}
+  .tbl .l{font-size:14px}
+  .tbl .tt{font-size:17px}
+  .tbl .pp{font-size:12.5px}
+  .tbl.new{font-size:15px}
+  .cmd-head{padding:10px 12px;gap:6px}
+  .cmd-head .ttl{font-size:24px}
+  .cmd-head .btn{min-height:48px;padding:10px 13px;font-size:15px}
+  .carte-pane{padding:0 12px 20px}
+  .cats{gap:8px;padding:12px 0}
+  .chip{font-size:16px;min-height:50px;padding:12px 18px}
+  .items{grid-template-columns:1fr 1fr;gap:10px}
+  .item{min-height:104px;padding:14px}
+  .item .nm{font-size:17px;line-height:1.25}
+  .item .pr{font-size:16.5px}
+  .item .pr span{font-size:13.5px}
+  .item.divers{font-size:16px}
+  .empty-cat{font-size:16px}
+  .mbar{min-height:68px;font-size:17px;padding:12px 18px}
+  .mbar b{font-size:23px}
+  .tk-head{padding:16px 16px 8px}
+  .tk-head b{font-size:28px}
+  .grp{font-size:14.5px;padding:14px 10px 6px}
+  .ln{grid-template-columns:42px 1fr auto;padding:14px 10px;font-size:17.5px}
+  .ln .d,.ln .nt{font-size:15px}
+  .ln .st{font-size:13px}
+  .tk-empty{font-size:17px}
+  .tk-foot{padding:14px 16px 16px}
+  .tk-tot{font-size:18px}
+  .tk-tot b{font-size:30px}
+  .tk-btns .btn{min-height:60px;font-size:18px}
+  .due .lbl{font-size:16px}
+  .due .big{font-size:48px}
+  .row{font-size:17px;padding:8px 0}
+  .modes .btn{min-height:66px;font-size:17.5px}
+  .stepper button{width:56px;height:56px;font-size:28px;border-radius:12px}
+  .stepper b{font-size:26px;min-width:44px}
+  .stepper .muted{font-size:15.5px}
+  .rendu{font-size:17px}
+  .rendu b{font-size:36px}
+  .paylist .pl{font-size:17px;padding:10px 0}
+  .x{width:44px;height:44px;font-size:18px}
+  .ticket{font-size:15px}
+  .kcard .kh b{font-size:26px}
+  .kcard .kh span{font-size:15px}
+  .kl{padding:15px 16px;font-size:18px}
+  .kl .d,.kl .nt{font-size:15.5px}
+  .jnav{gap:8px}
+  .jnav .d{order:-1;width:100%;min-width:0;font-size:24px;text-align:left}
+  .jnav .btn{flex:1}
+  .tlist .ti{grid-template-columns:48px 56px 1fr auto;font-size:16px;padding:14px 4px}
+  .tbl-tva{font-size:15.5px}
+  .carte-edit .ce{padding:15px 10px;font-size:16.5px;flex-wrap:wrap}
+  .add-line{font-size:16.5px;padding:15px 10px}
+  .field label{font-size:15px}
+  .sheet{padding:22px 18px calc(20px + env(safe-area-inset-bottom,0px));max-height:92vh}
+  .sheet h3{font-size:30px}
+  .sheet .sub{font-size:15.5px}
+  .sheet .grp-t{font-size:15.5px;margin:18px 0 10px}
+  .sheet .foot .btn{min-height:58px;font-size:17px}
+  .cv{gap:10px}
+  .cv .btn{min-height:64px;font-size:23px}
+  .opt-list .btn{min-height:58px;font-size:17px}
+  .confirm{font-size:16px}
+  .toast{font-size:16px;padding:12px 18px}
+}
 @media print{
   body *{visibility:hidden}
   .ticket,.ticket *{visibility:visible}
@@ -534,7 +621,7 @@ function vCommande(){
   var t=curT(),c=cfg();if(!t)return '';
   var cats=c.carte.cats;
   if(!ui.cat||!catOf(ui.cat))ui.cat=cats[0].id;
-  var h='<div class="cmd-head"><button class="btn ghost" data-act="nav" data-v="salle">Salle</button><div class="ttl">'+esc(t.label)+'</div>';
+  var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="salle">Salle</button><div class="ttl">'+esc(t.label)+'</div>';
   if(t.id.charAt(0)==='T')h+='<button class="btn ghost" data-act="sheetCouverts">'+(t.couverts||0)+' couv.</button>';
   h+='<button class="btn ghost" data-act="sheetOptions">Options</button></div>';
   h+='<div class="cmd-body"><div class="carte-pane" data-scroll="carte"><div class="cats">';
@@ -578,7 +665,7 @@ function defAmount(t){var r=reste(t);if(ui.pay.parts>1)return Math.min(r,Math.ce
 function vEncaisser(){
   var t=curT();if(!t)return '';
   var r=reste(t),rm=t.remise;
-  var h='<div class="cmd-head"><button class="btn ghost" data-act="nav" data-v="commande">Commande</button><div class="ttl">Encaisser \u00b7 '+esc(t.label)+'</div></div><div class="wrap"><div class="pay"><div class="card">';
+  var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="commande">Commande</button><div class="ttl">Encaisser \u00b7 '+esc(t.label)+'</div></div><div class="wrap"><div class="pay"><div class="card">';
   h+='<div class="due"><div class="lbl">'+(r>0?'Reste \u00e0 payer':'R\u00e9gl\u00e9')+'</div><div class="big num">'+eur(Math.max(0,r))+'</div></div>';
   h+='<div class="row"><span>Sous-total</span><span class="num">'+eur(sousTotal(t))+'</span></div>';
   if(rm)h+='<div class="row"><span>Remise '+(rm.type==='pct'?rm.v+'\u00a0%':'')+'</span><span class="num">'+eur(-remiseM(t))+'</span></div>';
