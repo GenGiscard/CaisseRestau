@@ -84,6 +84,7 @@ h2:first-child{margin-top:4px}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .field label{font-size:13px;color:var(--ink2);font-weight:600}
 .inp{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);font-size:16px}
+textarea.inp{font-family:var(--sans);font-size:15px;line-height:1.45;resize:vertical}
 .inp:focus{outline:2px solid var(--sage);outline-offset:-1px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:10px 14px;border-radius:999px;background:var(--chip);font-weight:600;font-size:14px;min-height:42px}
@@ -328,7 +329,7 @@ var CARTE_ORIGINE={
     {id:'de-ananas',cat:'desserts',nom:'Ananas r\u00f4ti',prix:800,all:'3 \u00b7 7'},
     {id:'de-mirabelle',cat:'desserts',nom:'Surprise autour de la mirabelle',prix:900,all:'3 \u00b7 7 \u00b7 8 \u00b7 12'},
     {id:'fo-gourmande',cat:'formule',nom:'Formule gourmande',prix:3600,unite:'/ pers.',formule:[
-      {nom:'Entr\u00e9e',choix:['\u0152uf en meurette 62 \u00b0C','Saumon gravlax','Potage du jour','Terrine de campagne']},
+      {nom:'Entr\u00e9e',choix:['\u0152uf en meurette 62 \u00b0C','Saumon gravlax','Potage du jour','Foie gras']},
       {nom:'Plat',choix:['Pav\u00e9 de saumon','Cassolette de la mer','Vol-au-vent traditionnel','Poulet jaune aux girolles','Mignon de porc tomates s\u00e9ch\u00e9es']},
       {nom:'Dessert',choix:['Surprise mirabelle','Cr\u00e8me br\u00fbl\u00e9e','Fromages de nos r\u00e9gions','Ananas r\u00f4ti']}
     ]}
@@ -464,6 +465,10 @@ function fusionCarte(k){
   var retir=['digestifs','cafes'];
   var sup=toArr(k.supprimes),ids={},cids={},orig={};CARTE_ORIGINE.cats.forEach(function(c){orig[c.id]=c});
   var out={cats:k.cats.filter(function(c){return retir.indexOf(c.id)<0}).map(function(c){return orig[c.id]||c}),items:k.items.filter(function(i){return String(i.id).indexOf('bo-')!==0}),supprimes:sup};
+  out.items=out.items.map(function(i){
+    if(i.id!=='fo-gourmande'||!i.formule)return i;
+    var j=clone(i);j.formule=toArr(j.formule).map(function(g){g=clone(g);g.choix=toArr(g.choix).map(function(c){return c==='Terrine de campagne'?'Foie gras':c});return g});return j;
+  });
   out.items.forEach(function(i){ids[i.id]=1});out.cats.forEach(function(c){cids[c.id]=1});
   CARTE_ORIGINE.cats.forEach(function(c,ix){if(!cids[c.id]){out.cats.splice(Math.min(ix,out.cats.length),0,c);cids[c.id]=1}});
   CARTE_ORIGINE.items.forEach(function(i){if(!ids[i.id]&&sup.indexOf(i.id)<0)out.items.push(i)});
@@ -1025,6 +1030,7 @@ function vSheet(){
     var isNew=!s.id;
     h='<h3>'+(isNew?'Nouvel article':'Modifier l\u2019article')+'</h3>'+
       '<div class="field"><label for="f-enom">Nom</label><input class="inp" id="f-enom" data-bind="sheet.nom" value="'+esc(s.nom)+'"></div>';
+    if(s.formule){s.formule.forEach(function(g,i){h+='<div class="field"><label for="f-fo'+i+'">Choix \u00ab\u00a0'+esc(g.nom)+'\u00a0\u00bb (un par ligne)</label><textarea class="inp" id="f-fo'+i+'" rows="5" data-bind="sheet.formule.'+i+'.txt">'+esc(g.txt)+'</textarea></div>'})}
     if(s.variantes){s.variantes.forEach(function(v,i){h+='<div class="field"><label for="f-ev'+i+'">Prix '+esc(v.nom)+'</label><input class="inp num" id="f-ev'+i+'" inputmode="decimal" data-bind="sheet.vp.'+i+'" value="'+esc(s.vp[i])+'"></div>'})}
     else h+='<div class="field"><label for="f-eprix">Prix TTC</label><input class="inp num" id="f-eprix" inputmode="decimal" data-bind="sheet.prix" value="'+esc(s.prix)+'" placeholder="0,00"></div>';
     h+='<div class="grp-t">TVA</div><div class="chips">'+[5.5,10,20].map(function(r){return '<button class="chip '+(s.tva===r?'on':'')+'" data-act="eTva" data-v="'+r+'">'+tauxTxt(r)+'</button>'}).join('')+'</div>';
@@ -1247,7 +1253,8 @@ var A={
   editItem:function(d){
     var it=itemOf(d.id);if(!it)return;
     ui.sheet={type:'edit',id:it.id,nom:it.nom,prix:it.variantes?'':csvNum(it.prix),tva:it.tva||10,cat:it.cat,
-      variantes:it.variantes?clone(it.variantes):null,vp:it.variantes?it.variantes.map(function(v){return csvNum(v.prix)}):null,confirm:false,err:''};
+      variantes:it.variantes?clone(it.variantes):null,vp:it.variantes?it.variantes.map(function(v){return csvNum(v.prix)}):null,
+      formule:it.formule?it.formule.map(function(g){return {nom:g.nom,txt:g.choix.join('\n')}}):null,confirm:false,err:''};
     render();
   },
   newItem:function(d){var ct=catOf(d.cat);ui.sheet={type:'edit',id:null,nom:'',prix:'',tva:ct&&ct.horsCuisine?20:10,cat:d.cat,variantes:null,vp:null,confirm:false,err:''};render()},
@@ -1259,7 +1266,9 @@ var A={
     var carte=clone(cfg().carte),prix=null,vars=null;
     if(s.variantes){vars=s.variantes.map(function(v,i){return {nom:v.nom,prix:parseMoney(s.vp[i])}});if(vars.some(function(v){return v.prix==null||v.prix<0})){s.err='Prix invalide.';render();return}}
     else{prix=parseMoney(s.prix);if(prix==null||prix<0){s.err='Prix invalide.';render();return}}
-    if(s.id){carte.items.forEach(function(it){if(it.id===s.id){it.nom=nom;it.tva=s.tva;it.cat=s.cat;if(vars){it.variantes=vars;it.prix=vars[0].prix}else it.prix=prix}})}
+    var fo=null;
+    if(s.formule){fo=s.formule.map(function(g){return {nom:g.nom,choix:String(g.txt||'').split('\n').map(function(x){return x.trim()}).filter(Boolean)}});if(fo.some(function(g){return !g.choix.length})){s.err='Chaque partie de la formule doit avoir au moins un choix.';render();return}}
+    if(s.id){carte.items.forEach(function(it){if(it.id===s.id){it.nom=nom;it.tva=s.tva;it.cat=s.cat;if(fo)it.formule=fo;if(vars){it.variantes=vars;it.prix=vars[0].prix}else it.prix=prix}})}
     else carte.items.push({id:'x-'+uid(),cat:s.cat,nom:nom,prix:prix,tva:s.tva});
     var c=clone(data.config||{});c.carte=carte;ui.sheet=null;Store.saveConfig(c);
   },
