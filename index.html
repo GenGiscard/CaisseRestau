@@ -437,6 +437,7 @@ var CARTE_ORIGINE={
     {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
   ])
 };
+var VERSION='2026-09-26 b';
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
@@ -967,7 +968,7 @@ function vReglages(){
     h+='<button class="add-line" data-act="newItem" data-cat="'+ct.id+'">Ajouter un article</button>';
   });
   h+='</div><div class="actions"><button class="btn warn" data-act="sheetResetCarte">Revenir \u00e0 la carte d\u2019origine</button></div>';
-  h+='<h2>Appareils</h2><div class="card small">Tous les appareils qui ouvrent cette page partagent les m\u00eames tables, commandes et journaux, en direct.</div></div>';
+  h+='<h2>Appareils</h2><div class="card small">Tous les appareils qui ouvrent cette page partagent les m\u00eames tables, commandes et journaux, en direct.<br><span class="muted">Version du logiciel : '+VERSION+'</span></div></div>';
   return h;
 }
 
