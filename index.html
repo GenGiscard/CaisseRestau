@@ -292,7 +292,7 @@ var CARTE_ORIGINE={
     {id:'g-boissons',nom:'Boissons'},
     {id:'aperitifs',nom:'Ap\u00e9ritifs',horsCuisine:true,parent:'g-boissons'},{id:'bieres',nom:'Bi\u00e8res',horsCuisine:true,parent:'g-boissons'},
     {id:'softs',nom:'Sans alcool',horsCuisine:true,parent:'g-boissons'},{id:'g-vins',nom:'Vins',parent:'g-boissons'},
-    {id:'champagnes',nom:'Champagnes',horsCuisine:true,parent:'g-vins'},{id:'vins-blancs',nom:'Blancs',horsCuisine:true,parent:'g-vins'},
+    {id:'vins-verre',nom:'Au verre',horsCuisine:true,parent:'g-vins'},{id:'champagnes',nom:'Champagnes',horsCuisine:true,parent:'g-vins'},{id:'vins-blancs',nom:'Blancs',horsCuisine:true,parent:'g-vins'},
     {id:'vins-roses',nom:'Ros\u00e9s',horsCuisine:true,parent:'g-vins'},{id:'vins-rouges',nom:'Rouges',horsCuisine:true,parent:'g-vins'},
     {id:'spiritueux',nom:'Spiritueux & digestifs',horsCuisine:true,parent:'g-boissons'},{id:'chaudes',nom:'Boissons chaudes',horsCuisine:true,parent:'g-boissons'},
     {id:'boissons',nom:'Autres boissons',horsCuisine:true,parent:'g-boissons'}
@@ -334,6 +334,12 @@ var CARTE_ORIGINE={
       {nom:'Dessert',choix:['Surprise mirabelle','Cr\u00e8me br\u00fbl\u00e9e','Fromages de nos r\u00e9gions','Ananas r\u00f4ti']}
     ]}
   ].concat([
+    {id:"vv-maldita-blanc",cat:"vins-verre",nom:"La Maldita blanc \u00b7 Rioja, Garnacha blanca",prix:500,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-massonnay",cat:"vins-verre",nom:"J. Massonnay \u00b7 Bourgogne Chardonnay, L\u2019\u00c9motion Originelle",prix:600,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
+    {id:"vv-maldita-rose",cat:"vins-verre",nom:"La Maldita ros\u00e9 \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Ros\u00e9",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-maldita-rouge",cat:"vins-verre",nom:"La Maldita rouge \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-pierres-dorees",cat:"vins-verre",nom:"Vignerons des Pierres Dor\u00e9es \u00b7 Coteaux bourguignons, Les Lilis, 2024",prix:600,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
+    {id:"vv-arnoux",cat:"vins-verre",nom:"Arnoux et Fils \u00b7 C\u00f4tes du Rh\u00f4ne, Vieux Clocher, 2024",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
     {id:"bs-aperitif-maison-12-cl-methode-traditionn",cat:"aperitifs",nom:"Ap\u00e9ritif maison 12 cl \u00b7 M\u00e9thode traditionnelle, cr\u00e8me de mirabelle, mirabelle",prix:600,tva:20},
     {id:"bs-coupe-de-champagne-12-cl-saillans-blanc-",cat:"aperitifs",nom:"Coupe de champagne 12 cl \u00b7 Saillans, Blanc de Blancs",prix:900,tva:20},
     {id:"bs-kir-royal-12-cl-champagne-creme-de-cassi",cat:"aperitifs",nom:"Kir royal 12 cl \u00b7 Champagne, cr\u00e8me de cassis",prix:1000,tva:20},
@@ -437,7 +443,7 @@ var CARTE_ORIGINE={
     {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
   ])
 };
-var VERSION='2026-09-26 b';
+var VERSION='2026-09-28 a';
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
