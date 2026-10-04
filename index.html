@@ -449,7 +449,7 @@ var CARTE_ORIGINE={
     {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
   ])
 };
-var VERSION='2026-09-28 b';
+var VERSION='2026-09-28 c';
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
@@ -891,10 +891,11 @@ function ticketHtml(tk){
   tk.lignes.forEach(function(l){h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(l.detail?'<div class="dd">'+esc(l.detail)+'</div>':'')});
   h+='<hr>';
   if(tk.remise)h+='<div class="r"><span>Sous-total</span><span>'+eur(tk.sousTotal)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-tk.remise)+'</span></div>';
-  h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(tk.total)+'</span></div><hr><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';
+  h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(tk.total)+'</span></div><hr>';
+  if(tk.tva.length){h+='<table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';
   tk.tva.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});
-  h+='</table><hr>';
-  tk.paiements.forEach(function(p){h+='<div class="r"><span>'+esc(p.mode)+'</span><span>'+eur(p.recu||p.montant)+'</span></div>'});
+  h+='</table><hr>';}
+  tk.paiements.forEach(function(p){h+='<div class="r"><span>'+esc(p.mode==='Offert'?'Offert par la maison':p.mode)+'</span><span>'+eur(p.recu||p.montant)+'</span></div>'});
   if(tk.rendu)h+='<div class="r"><span>Rendu</span><span>'+eur(tk.rendu)+'</span></div>';
   h+='<hr><div class="c">Merci de votre visite</div></div>';
   return h;
@@ -1190,6 +1191,8 @@ var A={
       sousTotal:st,remise:remiseM(t),total:tot,tva:tvaDetail(t.lines,st,tot),
       paiements:(t.payments||[]).map(function(p){return {mode:p.mode,montant:p.montant,recu:p.recu}}),
       rendu:(t.payments||[]).reduce(function(a,p){return a+(p.rendu||0)},0)};
+    /* addition à 0 \u20ac (repas offert) : on garde une trace du r\u00e8glement, sinon la base refuse un ticket sans paiement */
+    if(!tk.paiements.length)tk.paiements=[{mode:'Offert',montant:0,recu:0}];
     try{
       var sa=svcActif();if(sa)tk.service=sa.key;
       var saved=await Store.appendTicket(sa?sa.day:dayKey(),tk);
