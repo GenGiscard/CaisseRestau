@@ -450,7 +450,7 @@ var CARTE_ORIGINE={
     {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
   ])
 };
-var VERSION='2026-10-08 b';
+var VERSION='2026-10-08 c';
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
@@ -849,7 +849,32 @@ function ticketPane(t){
 }
 
 /* ---- Encaisser ---- */
-function defAmount(t){var r=reste(t);if(ui.pay.parts>1)return Math.min(r,Math.ceil(total(t)/ui.pay.parts));return r}
+function lReste(l){return l.qty-(l.pq||0)}
+function selCalc(t){
+  var sel=ui.pay.sel||{},lignes=[],tout=true;
+  t.lines.forEach(function(l){var q=sel[l.id]||0;if(q>0){var x=clone(l);x.qty=q;lignes.push(x)}if(!l.offert&&lReste(l)-q>0)tout=false});
+  if(!lignes.length)return null;
+  var st=lignes.reduce(function(a,l){return a+lt(l)},0),sT=sousTotal(t);
+  var rem=sT?Math.round(remiseM(t)*st/sT):0,tot=st-rem;
+  if(tout)tot=reste(t);
+  tot=Math.max(0,Math.min(tot,reste(t)));
+  return {lignes:lignes,st:st,rem:st-tot,tot:tot,tva:tvaDetail(lignes,st,tot)};
+}
+function partRecuHtml(pr){
+  var c=cfg(),d=new Date(pr.t);
+  var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div>'+(c.adresse?'<div class="c small">'+esc(c.adresse)+'</div>':'')+'<hr>';
+  h+='<div class="r"><span>'+esc(pr.table)+' \u00b7 r\u00e8glement '+pr.n+'</span><span>'+d.toLocaleDateString('fr-FR')+' '+hhmm(pr.t)+'</span></div><hr>';
+  if(pr.sans)h+='<div class="r"><span>Repas et boissons</span><span>'+eur(pr.st)+'</span></div>';
+  else pr.lignes.forEach(function(l){h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(l.detail?'<div class="dd">'+esc(l.detail)+'</div>':'')});
+  h+='<hr>';
+  if(pr.rem)h+='<div class="r"><span>Sous-total</span><span>'+eur(pr.st)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-pr.rem)+'</span></div>';
+  h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(pr.tot)+'</span></div>';
+  if(pr.tva.length){h+='<hr><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';pr.tva.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});h+='</table>'}
+  h+='<hr><div class="r"><span>'+esc(pr.mode)+'</span><span>'+eur(pr.recu)+'</span></div>'+(pr.rendu?'<div class="r"><span>Rendu</span><span>'+eur(pr.rendu)+'</span></div>':'');
+  h+='<hr><div class="c">Merci de votre visite</div></div>';
+  return h;
+}
+function defAmount(t){var sc=selCalc(t);if(sc)return sc.tot;var r=reste(t);if(ui.pay.parts>1)return Math.min(r,Math.ceil(total(t)/ui.pay.parts));return r}
 function vEncaisser(){
   var t=curT();if(!t)return '';
   var r=reste(t),rm=t.remise;
@@ -859,6 +884,13 @@ function vEncaisser(){
   if(rm)h+='<div class="row"><span>Remise '+(rm.type==='pct'?rm.v+'\u00a0%':'')+'</span><span class="num">'+eur(-remiseM(t))+'</span></div>';
   h+='<div class="row sep"><b>Total TTC</b><b class="num">'+eur(total(t))+'</b></div>';
   tvaDetail(t.lines,sousTotal(t),total(t)).forEach(function(x){h+='<div class="row small muted"><span>dont TVA '+tauxTxt(x.taux)+'</span><span class="num">'+eur(x.tva)+'</span></div>'});
+  if(r>0){
+    h+='<div class="grp-t" style="margin-top:14px;font-weight:700">D\u00e9tail de l\u2019addition</div><p class="small muted" style="margin:2px 0 6px">Touchez les articles \u00e0 r\u00e9gler maintenant (un appui par article).</p>';
+    t.lines.forEach(function(l){
+      var rs=lReste(l),q=(ui.pay.sel||{})[l.id]||0,fini=rs<=0||l.offert;
+      h+='<button class="ln'+(q?' on-sel':'')+'" data-act="paySel" data-id="'+l.id+'" '+(fini?'disabled style="opacity:.4"':'')+'><span class="q">'+(fini?'':(q?q+'/':'')+rs+'\u00d7')+'</span><span>'+esc(l.nom)+(l.detail?'<div class="d">'+esc(l.detail)+'</div>':'')+'</span><span class="num">'+(l.offert?'offert':(rs<=0?'r\u00e9gl\u00e9':eur(l.prix)))+'</span></button>';
+    });
+  }
   if((t.payments||[]).length){
     h+='<div class="grp-t" style="margin-top:14px;font-weight:700">Paiements</div><div class="paylist">';
     t.payments.forEach(function(p,i){h+='<div class="pl"><span>'+esc(p.mode)+(p.rendu?' <span class="muted small">(re\u00e7u '+eur(p.recu)+')</span>':'')+'</span><span style="display:flex;gap:10px;align-items:center"><b class="num">'+eur(p.montant)+'</b><button class="x" data-act="delPay" data-i="'+i+'" aria-label="Retirer">\u00d7</button></span></div>'});
@@ -873,6 +905,11 @@ function vEncaisser(){
       h+='<button class="chip '+(on?'on':'')+'" data-act="remise" data-v="'+o[0]+'">'+o[1]+'</button>';
     });
     h+='<button class="chip '+(rm&&rm.type==='eur'?'on':'')+'" data-act="sheetRemise">Montant\u2026</button></div>';
+    var sc=selCalc(t);
+    if(sc){
+      h+='<div class="rendu" style="margin-top:16px;text-align:left"><span>S\u00e9lection \u00e0 r\u00e9gler</span><b class="num">'+eur(sc.tot)+'</b></div>'+
+        '<div class="grp-t" style="font-weight:700;margin:14px 0 8px">Ticket</div><div class="chips"><button class="chip '+(ui.pay.sans?'':'on')+'" data-act="paySans" data-v="0">D\u00e9taill\u00e9</button><button class="chip '+(ui.pay.sans?'on':'')+'" data-act="paySans" data-v="1">Sans d\u00e9tail</button><button class="chip" data-act="payClear">Tout d\u00e9s\u00e9lectionner</button></div>';
+    }else
     h+='<div class="grp-t" style="font-weight:700;margin:16px 0 8px">Partager l\u2019addition</div><div class="stepper"><button data-act="parts" data-d="-1">\u2212</button><b class="num">'+ui.pay.parts+'</b><button data-act="parts" data-d="1">+</button><span class="muted">'+(ui.pay.parts>1?'soit '+eur(Math.ceil(total(t)/ui.pay.parts))+' par part':'personne(s)')+'</span></div>';
     h+='<div class="field" style="margin-top:16px"><label for="f-montant">Montant encaiss\u00e9 (vide = '+eur(defAmount(t))+')</label><input class="inp num" id="f-montant" inputmode="decimal" autocomplete="off" placeholder="'+eur(defAmount(t))+'" data-bind="pay.montant" value="'+esc(ui.pay.montant)+'"></div>';
     h+='<div class="modes">'+MODES.map(function(m){return '<button class="btn '+(m==='Carte bancaire'?'pri':'')+'" data-act="payer" data-m="'+m+'">'+m+'</button>'}).join('')+'</div>';
@@ -1126,6 +1163,9 @@ function vSheet(){
       (s.err?'<div class="confirm">'+esc(s.err)+'</div>':'')+
       '<div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn pri" data-act="ouvrir" '+(s.busy?'disabled':'')+'>'+(s.modif?'Enregistrer':'Ouvrir le service')+'</button></div>';
   }
+  else if(s.type==='partRecu'){
+    h='<h3>R\u00e8glement enregistr\u00e9</h3><div class="sub">'+(s.pr.rendu?'Monnaie \u00e0 rendre : '+eur(s.pr.rendu):'Imprimez le ticket de cette personne si besoin.')+'</div>'+partRecuHtml(s.pr)+'<div class="foot"><button class="btn ghost" data-act="imprimer">Imprimer</button><button class="btn pri" data-act="closeSheet">Continuer</button></div>';
+  }
   else if(s.type==='resetCarte'){
     h='<h3>Carte d\u2019origine</h3><div class="confirm">Toutes vos modifications de la carte (prix, boissons ajout\u00e9es) seront perdues.</div><div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn warn" data-act="resetCarte">R\u00e9tablir</button></div>';
   }
@@ -1232,20 +1272,33 @@ var A={
     t.lines.forEach(function(l){if(l.etat==='attente'){n+=l.qty;l.t=now;if(l.cuisine===false){l.etat='servi';l.tp=now}else l.etat='envoye'}});
     if(!n)return;Store.saveTable(t);toast(n+' article'+(n>1?'s':'')+' envoy\u00e9'+(n>1?'s':''));
   },
-  encaisser:function(){ui.view='encaisser';ui.showTicket=false;ui.pay={montant:'',parts:1};ui.rendu=0;render()},
+  encaisser:function(){ui.view='encaisser';ui.showTicket=false;ui.pay={montant:'',parts:1,sel:{},sans:false};ui.rendu=0;render()},
   remise:function(d){var t=editT();if(!t)return;var v=parseInt(d.v,10);t.remise=v?{type:'pct',v:v}:null;Store.saveTable(t)},
   sheetRemise:function(){ui.sheet={type:'remise',v:''};render()},
   remiseEur:function(){var v=parseMoney(ui.sheet.v);var t=editT();if(!t)return;if(v==null||v<0){toast('Montant invalide');return}t.remise=v?{type:'eur',v:v}:null;ui.sheet=null;Store.saveTable(t)},
   parts:function(d){ui.pay.parts=Math.max(1,Math.min(20,ui.pay.parts+parseInt(d.d,10)));ui.pay.montant='';render()},
+  paySel:function(d){var t=curT();if(!t)return;var l=t.lines.filter(function(x){return x.id===d.id})[0];if(!l)return;ui.pay.sel=ui.pay.sel||{};var q=(ui.pay.sel[l.id]||0)+1;ui.pay.sel[l.id]=q>lReste(l)?0:q;ui.pay.montant='';render()},
+  paySans:function(d){ui.pay.sans=d.v==='1';render()},
+  payClear:function(){ui.pay.sel={};render()},
   payer:function(d){
     var t=editT();if(!t)return;var r=reste(t);if(r<=0)return;
+    var sc=selCalc(t);
     var m=parseMoney(ui.pay.montant);if(m==null||m<=0)m=defAmount(t);
-    var applied=Math.min(m,r),rendu=0;
-    if(m>r&&d.m==='Esp\u00e8ces')rendu=m-r;
-    t.payments=(t.payments||[]).concat([{mode:d.m,montant:applied,recu:d.m==='Esp\u00e8ces'?m:applied,rendu:rendu,t:Date.now()}]);
+    var du=sc?sc.tot:r;
+    var applied=Math.min(m,du),rendu=0;
+    if(m>du&&d.m==='Esp\u00e8ces')rendu=m-du;
+    if(sc&&applied<du){toast('Montant insuffisant pour la s\u00e9lection');return}
+    var pay={mode:d.m,montant:applied,recu:d.m==='Esp\u00e8ces'?m:applied,rendu:rendu,t:Date.now()};
+    if(sc){
+      pay.items=Object.keys(ui.pay.sel).filter(function(k){return ui.pay.sel[k]>0}).map(function(k){return {id:k,q:ui.pay.sel[k]}});
+      t.lines.forEach(function(l){var q=ui.pay.sel[l.id]||0;if(q)l.pq=(l.pq||0)+q});
+      ui.sheet={type:'partRecu',pr:{table:t.label,n:(t.payments||[]).length+1,t:pay.t,lignes:sc.lignes,st:sc.st,rem:sc.rem,tot:sc.tot,tva:sc.tva,mode:d.m,recu:pay.recu,rendu:rendu,sans:!!ui.pay.sans}};
+      ui.pay.sel={};
+    }
+    t.payments=(t.payments||[]).concat([pay]);
     ui.pay.montant='';ui.rendu=rendu;Store.saveTable(t);
   },
-  delPay:function(d){var t=editT();if(!t)return;t.payments.splice(parseInt(d.i,10),1);ui.rendu=0;Store.saveTable(t)},
+  delPay:function(d){var t=editT();if(!t)return;var pp=t.payments[parseInt(d.i,10)];(pp&&pp.items?toArr(pp.items):[]).forEach(function(it){t.lines.forEach(function(l){if(l.id===it.id)l.pq=Math.max(0,(l.pq||0)-it.q)})});t.payments.splice(parseInt(d.i,10),1);ui.rendu=0;Store.saveTable(t)},
   cloturer:async function(){
     var t=curT();if(!t||reste(t)>0||ui.busy)return;
     ui.busy=true;render();
