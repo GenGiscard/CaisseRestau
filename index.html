@@ -144,6 +144,7 @@ textarea.inp{font-family:var(--sans);font-size:15px;line-height:1.45;resize:vert
 .grp{font-size:12px;font-weight:700;color:var(--ink2);padding:12px 8px 4px}
 .ln{display:grid;grid-template-columns:34px 1fr auto;gap:6px;width:100%;text-align:left;padding:9px 8px;border-radius:9px}
 .ln:hover{background:var(--bg)}
+.ln.on-sel{background:var(--sage-soft);color:var(--sage-ink)}
 .ln .q{font-weight:700}
 .ln .d{font-size:12.5px;color:var(--ink2);white-space:pre-line;margin-top:2px}
 .ln .nt{font-size:12.5px;color:var(--warn);margin-top:2px}
@@ -449,7 +450,7 @@ var CARTE_ORIGINE={
     {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
   ])
 };
-var VERSION='2026-09-28 c';
+var VERSION='2026-10-08 b';
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
@@ -884,11 +885,12 @@ function vEncaisser(){
 }
 
 /* ---- Reçu ---- */
-function ticketHtml(tk){
+function ticketHtml(tk,sansDetail){
   var c=cfg(),d=new Date(tk.ferme);
   var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div>'+(c.adresse?'<div class="c small">'+esc(c.adresse)+'</div>':'')+'<hr>';
   h+='<div class="r"><span>Ticket n\u00b0 '+tk.num+'</span><span>'+d.toLocaleDateString('fr-FR')+' '+hhmm(tk.ferme)+'</span></div><div class="r"><span>'+esc(tk.table)+'</span><span>'+(tk.couverts?tk.couverts+' couvert'+(tk.couverts>1?'s':''):'')+'</span></div><hr>';
-  tk.lignes.forEach(function(l){h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(l.detail?'<div class="dd">'+esc(l.detail)+'</div>':'')});
+  if(sansDetail)h+='<div class="r"><span>Repas et boissons</span><span>'+eur(tk.sousTotal)+'</span></div>';
+  else tk.lignes.forEach(function(l){h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(l.detail?'<div class="dd">'+esc(l.detail)+'</div>':'')});
   h+='<hr>';
   if(tk.remise)h+='<div class="r"><span>Sous-total</span><span>'+eur(tk.sousTotal)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-tk.remise)+'</span></div>';
   h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(tk.total)+'</span></div><hr>';
@@ -900,9 +902,71 @@ function ticketHtml(tk){
   h+='<hr><div class="c">Merci de votre visite</div></div>';
   return h;
 }
+function persoCalc(tk){
+  var m=parseMoney(ui.perso.montant);if(m==null||m<0)m=tk.total;m=Math.min(m,tk.total);
+  var nb=parseInt(ui.perso.nb,10);if(!(nb>=1))nb=1;
+  var acc=0,tv=tk.tva.map(function(x,i){var ttc=i===tk.tva.length-1?m-acc:Math.round(x.ttc*m/(tk.total||1));acc+=ttc;var ht=Math.round(ttc/(1+x.taux/100));return {taux:x.taux,ttc:ttc,ht:ht,tva:ttc-ht}}).filter(function(x){return x.ttc});
+  return {m:m,nb:nb,tva:tv};
+}
+function persoHtml(tk){
+  var c=cfg(),d=new Date(tk.ferme),r=persoCalc(tk),ht=r.tva.reduce(function(a,x){return a+x.ht},0);
+  var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div>'+(c.adresse?'<div class="c small">'+esc(c.adresse)+'</div>':'')+'<hr>';
+  h+='<div class="r"><span>Note n° '+tk.num+'</span><span>'+d.toLocaleDateString('fr-FR')+' '+hhmm(tk.ferme)+'</span></div><hr>';
+  h+='<div class="r"><span>'+r.nb+' repas</span><span>'+eur(r.m)+'</span></div><hr>';
+  h+='<div class="r"><span>Total HT</span><span>'+eur(ht)+'</span></div><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';
+  r.tva.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});
+  h+='</table><hr><div class="r tot"><span>TOTAL TTC</span><span>'+eur(r.m)+'</span></div><hr><div class="c">Merci de votre visite</div></div>';
+  return h;
+}
+function splitCalc(tk){
+  var sel=ui.rv.sel,lignes=[];
+  tk.lignes.forEach(function(l,i){var q=sel[i]||0;if(q>0){var x=clone(l);x.qty=q;lignes.push(x)}});
+  var st=lignes.reduce(function(a,l){return a+lt(l)},0);
+  var rem=tk.remise&&tk.sousTotal?Math.round(tk.remise*st/tk.sousTotal):0;
+  var tot=st-rem;
+  return {lignes:lignes,sousTotal:st,remise:rem,total:tot,tva:tvaDetail(lignes,st,tot)};
+}
+function partHtml(tk,r,sansDetail){
+  var c=cfg(),d=new Date(tk.ferme);
+  var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div>'+(c.adresse?'<div class="c small">'+esc(c.adresse)+'</div>':'')+'<hr>';
+  h+='<div class="r"><span>Ticket n° '+tk.num+' · part '+ui.rv.part+'</span><span>'+d.toLocaleDateString('fr-FR')+' '+hhmm(tk.ferme)+'</span></div><div class="r"><span>'+esc(tk.table)+'</span></div><hr>';
+  if(!r.lignes.length)h+='<div class="c" style="color:#777">Touchez les articles de cette personne.</div>';
+  else if(sansDetail)h+='<div class="r"><span>Repas et boissons</span><span>'+eur(r.sousTotal)+'</span></div>';
+  else r.lignes.forEach(function(l){h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(l.detail?'<div class="dd">'+esc(l.detail)+'</div>':'')});
+  h+='<hr>';
+  if(r.remise)h+='<div class="r"><span>Sous-total</span><span>'+eur(r.sousTotal)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-r.remise)+'</span></div>';
+  h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(r.total)+'</span></div>';
+  if(r.tva.length){h+='<hr><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';r.tva.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});h+='</table>'}
+  h+='<hr><div class="c">Merci de votre visite</div></div>';
+  return h;
+}
 function vRecu(){
   var tk=ui.recu;if(!tk)return '';
-  return '<div class="wrap">'+ticketHtml(tk)+'<div class="actions"><button class="btn ghost" data-act="imprimer">Imprimer</button><button class="btn pri" data-act="nav" data-v="'+ui.recuFrom+'">'+(ui.recuFrom==='journal'?'Retour au journal':'Retour \u00e0 la salle')+'</button></div></div>';
+  if(!ui.rv||ui.rv.id!==tk.id)ui.rv={id:tk.id,mode:'detail',sans:false,sel:{},done:{},part:1};
+  if(ui.perso&&ui.perso.id!==tk.id)ui.perso=null;
+  var rv=ui.rv,retour='<button class="btn pri" data-act="nav" data-v="'+ui.recuFrom+'">'+(ui.recuFrom==='journal'?'Retour au journal':'Retour à la salle')+'</button>';
+  var modes='<div class="chips" style="justify-content:center;margin-bottom:16px">'+[['detail','Détaillé'],['sans','Sans détail'],['split','Par personne'],['perso','Personnalisé']].map(function(m){return (m[0]!=='detail'&&m[0]!=='sans'&&!(tk.total>0))?'':'<button class="chip '+(rv.mode===m[0]?'on':'')+'" data-act="rvMode" data-m="'+m[0]+'">'+m[1]+'</button>'}).join('')+'</div>';
+  if(rv.mode==='perso'){
+    if(!ui.perso)ui.perso={id:tk.id,nb:String(tk.couverts||1),montant:csvNum(tk.total)};
+    return '<div class="wrap" style="max-width:420px">'+modes+'<div class="card" style="margin-bottom:16px">'+
+      '<div class="field"><label for="f-pnb">Nombre de repas</label><input class="inp num" id="f-pnb" inputmode="numeric" autocomplete="off" data-bind="perso.nb" data-live="1" value="'+esc(ui.perso.nb)+'"></div>'+
+      '<div class="field"><label for="f-pm">Montant TTC (au plus '+eur(tk.total)+')</label><input class="inp num" id="f-pm" inputmode="decimal" autocomplete="off" data-bind="perso.montant" data-live="1" value="'+esc(ui.perso.montant)+'"></div>'+
+      '<p class="small muted" style="margin:0">La TVA est répartie selon les taux réels de l’addition.</p></div>'+
+      persoHtml(tk)+'<div class="actions"><button class="btn ghost" data-act="imprimer">Imprimer</button>'+retour+'</div></div>';
+  }
+  if(rv.mode==='split'){
+    var r=splitCalc(tk),h='<div class="wrap" style="max-width:820px">'+modes+'<div class="jgrid" style="margin-top:0;align-items:start"><div class="card"><b>Personne '+rv.part+'</b><p class="small muted" style="margin:4px 0 8px">Touchez un article pour l’ajouter à son ticket. Touchez encore pour en ajouter un autre ou le retirer.</p>';
+    tk.lignes.forEach(function(l,i){
+      var reste=l.qty-(rv.done[i]||0),q=rv.sel[i]||0;
+      h+='<button class="ln'+(q?' on-sel':'')+'" data-act="splitTap" data-i="'+i+'" '+(reste<=0?'disabled style="opacity:.35"':'')+'><span class="q">'+(q?q+'/':'')+reste+'×</span><span>'+esc(l.nom)+(l.detail?'<div class="d">'+esc(l.detail)+'</div>':'')+'</span><span class="num">'+(l.offert?'offert':eur(l.prix))+'</span></button>';
+    });
+    var restant=tk.lignes.some(function(l,i){return l.qty-(rv.done[i]||0)-(rv.sel[i]||0)>0});
+    h+='<div class="chips" style="margin-top:12px"><button class="chip '+(rv.sans?'on':'')+'" data-act="rvSans">Sans détail</button></div>';
+    h+='<div class="foot" style="margin-top:12px"><button class="btn ghost" data-act="splitReset">Recommencer</button><button class="btn sage" data-act="splitNext" '+(r.lignes.length&&restant?'':'disabled')+'>Personne suivante</button></div></div>';
+    h+='<div>'+partHtml(tk,r,rv.sans)+'<div class="actions"><button class="btn ghost" data-act="imprimer" '+(r.lignes.length?'':'disabled')+'>Imprimer</button>'+retour+'</div></div></div></div>';
+    return h;
+  }
+  return '<div class="wrap">'+modes+ticketHtml(tk,rv.mode==='sans')+'<div class="actions"><button class="btn ghost" data-act="imprimer">Imprimer</button>'+retour+'</div></div>';
 }
 
 /* ---- Cuisine ---- */
@@ -1026,9 +1090,9 @@ function vSheet(){
     var t2=curT();if(!t2){ui.sheet=null;return ''}
     h='<h3>'+esc(t2.label)+'</h3><div class="sub">Ouverte \u00e0 '+hhmm(t2.ouvert)+'</div><div class="opt-list">';
     if(t2.id.charAt(0)==='T')h+='<button class="btn" data-act="sheetTransfert">Changer de table</button>';
-    if(!paye(t2))h+='<button class="btn warn" data-act="annulerAsk">'+(t2.lines.length?'Annuler la commande et lib\u00e9rer':'Lib\u00e9rer la table')+'</button>';
+    h+='<button class="btn warn" data-act="annulerAsk">'+(t2.lines.length?'Annuler la commande et lib\u00e9rer':'Lib\u00e9rer la table')+'</button>';
     h+='</div>';
-    if(s.confirm)h+='<div class="confirm">Toute la commande sera effac\u00e9e. Continuer ?<div class="foot"><button class="btn ghost" data-act="closeSheet">Non</button><button class="btn warn" data-act="annulerYes">Oui, annuler</button></div></div>';
+    if(s.confirm)h+='<div class="confirm">Toute la commande sera effac\u00e9e'+(paye(t2)?', ainsi que l\u2019acompte de '+eur(paye(t2))+' (\u00e0 rendre au client)':'')+'. Continuer ?<div class="foot"><button class="btn ghost" data-act="closeSheet">Non</button><button class="btn warn" data-act="annulerYes">Oui, annuler</button></div></div>';
     h+='<div class="foot"><button class="btn ghost" data-act="closeSheet">Fermer</button></div>';
   }
   else if(s.type==='transfert'){
@@ -1123,7 +1187,7 @@ var A={
     ui.sheet=null;Store.saveTable(t);Store.deleteTable(old);goCommande(d.id);toast('Commande d\u00e9plac\u00e9e vers la '+t.label);
   },
   annulerAsk:function(){var t=curT();if(!t.lines.length){A.annulerYes();return}ui.sheet.confirm=true;render()},
-  annulerYes:function(){var t=curT();if(!t||paye(t))return;ui.sheet=null;ui.view='salle';var id=t.id;ui.cur=null;Store.deleteTable(id)},
+  annulerYes:function(){var t=curT();if(!t)return;ui.sheet=null;ui.view='salle';var id=t.id;ui.cur=null;Store.deleteTable(id)},
   cat:function(d){ui.cat=d.id;ui.scroll0=true;render()},
   item:function(d){
     var it=itemOf(d.id);if(!it)return;
@@ -1234,6 +1298,13 @@ var A={
     catch(e){toast('Cl\u00f4ture impossible, v\u00e9rifiez la connexion')}
     ui.busy=false;ui.ferm.confirm=false;render();
   },
+  rvMode:function(d){ui.rv.mode=d.m;render()},
+  rvSans:function(){ui.rv.sans=!ui.rv.sans;render()},
+  splitTap:function(d){var tk=ui.recu,i=+d.i,rv=ui.rv,reste=tk.lignes[i].qty-(rv.done[i]||0),q=(rv.sel[i]||0)+1;rv.sel[i]=q>reste?0:q;render()},
+  splitNext:function(){var rv=ui.rv;Object.keys(rv.sel).forEach(function(i){rv.done[i]=(rv.done[i]||0)+rv.sel[i]});rv.sel={};rv.part++;render()},
+  splitReset:function(){var rv=ui.rv;rv.sel={};rv.done={};rv.part=1;render()},
+  persoOn:function(){var tk=ui.recu;if(!tk)return;ui.perso={id:tk.id,nb:String(tk.couverts||1),montant:csvNum(tk.total)};render()},
+  persoOff:function(){ui.perso=null;render()},
   imprimer:function(){try{window.print()}catch(e){toast('Impression indisponible ici')}},
   kLine:function(d){
     var t=data.tables[d.t];if(!t)return;t=clone(t);
