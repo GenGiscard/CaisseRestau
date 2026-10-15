@@ -248,6 +248,15 @@ textarea.inp{font-family:var(--sans);font-size:15px;line-height:1.45;resize:vert
 
 @media (max-width:760px){.tables{grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}.tbl{min-height:92px;padding:10px}.tbl .n{font-size:30px}}
 .item .it-sub{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.25}
+/* fins de cave */
+.stk-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:4px 0 10px}
+.stk-bar .btn{min-height:40px;padding:8px 14px}
+.item .stk-t{font-size:12px;font-weight:600;color:var(--warn);margin-top:4px}
+.item .pr s{color:var(--ink2);font-size:12px}
+.item.epuise{opacity:.45}
+.stk-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.stk-ctl{display:flex;align-items:center;gap:6px;flex:none}
+.stk-ctl .inp{width:64px;text-align:center;padding:8px 6px}
 /* journée */
 .daybar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--paper);border-radius:12px;box-shadow:var(--shadow);padding:10px 14px;margin-top:12px}
 .daybar.off{background:var(--warn-soft);color:var(--warn);box-shadow:none}
@@ -287,60 +296,70 @@ var SAUCES=['B\u00e9arnaise','Poivre'];
 var CUISSONS=['Bleu','Saignant','\u00c0 point','Bien cuit'];
 var CARTE_ORIGINE={
   cats:[
-    {id:'planches',nom:'Planches'},{id:'entrees',nom:'Entr\u00e9es'},{id:'viandes',nom:'Viandes'},
-    {id:'vege',nom:'V\u00e9g\u00e9tarien'},{id:'poissons',nom:'Poissons'},{id:'paellas',nom:'Paellas'},
-    {id:'fromages',nom:'Fromages'},{id:'desserts',nom:'Desserts'},{id:'formule',nom:'Formule'},
-    {id:'g-boissons',nom:'Boissons'},
-    {id:'aperitifs',nom:'Ap\u00e9ritifs',horsCuisine:true,parent:'g-boissons'},{id:'bieres',nom:'Bi\u00e8res',horsCuisine:true,parent:'g-boissons'},
-    {id:'softs',nom:'Sans alcool',horsCuisine:true,parent:'g-boissons'},{id:'g-vins',nom:'Vins',parent:'g-boissons'},
-    {id:'vins-verre',nom:'Au verre',horsCuisine:true,parent:'g-vins'},{id:'champagnes',nom:'Champagnes',horsCuisine:true,parent:'g-vins'},{id:'vins-blancs',nom:'Blancs',horsCuisine:true,parent:'g-vins'},
-    {id:'vins-roses',nom:'Ros\u00e9s',horsCuisine:true,parent:'g-vins'},{id:'vins-rouges',nom:'Rouges',horsCuisine:true,parent:'g-vins'},
-    {id:'spiritueux',nom:'Spiritueux & digestifs',horsCuisine:true,parent:'g-boissons'},{id:'chaudes',nom:'Boissons chaudes',horsCuisine:true,parent:'g-boissons'},
-    {id:'boissons',nom:'Autres boissons',horsCuisine:true,parent:'g-boissons'}
+    {id:"suggestions",nom:"Suggestions"},
+    {id:"planches",nom:"Planches"},
+    {id:"entrees",nom:"Entr\u00e9es"},
+    {id:"viandes",nom:"Viandes"},
+    {id:"vege",nom:"V\u00e9g\u00e9tarien"},
+    {id:"poissons",nom:"Poissons"},
+    {id:"paellas",nom:"Paellas"},
+    {id:"fromages",nom:"Fromages"},
+    {id:"desserts",nom:"Desserts"},
+    {id:"formule",nom:"Formule"},
+    {id:"g-boissons",nom:"Boissons"},
+    {id:"aperitifs",nom:"Ap\u00e9ritifs",horsCuisine:true,parent:"g-boissons"},
+    {id:"cocktails",nom:"Cocktails",horsCuisine:true,parent:"g-boissons"},
+    {id:"bieres",nom:"Bi\u00e8res",horsCuisine:true,parent:"g-boissons"},
+    {id:"softs",nom:"Sans alcool",horsCuisine:true,parent:"g-boissons"},
+    {id:"g-vins",nom:"Vins",parent:"g-boissons"},
+    {id:"vins-verre",nom:"Au verre",horsCuisine:true,parent:"g-vins"},
+    {id:"champagnes",nom:"Champagnes",horsCuisine:true,parent:"g-vins"},
+    {id:"vins-blancs",nom:"Blancs",horsCuisine:true,parent:"g-vins"},
+    {id:"vins-roses",nom:"Ros\u00e9s",horsCuisine:true,parent:"g-vins"},
+    {id:"vins-rouges",nom:"Rouges",horsCuisine:true,parent:"g-vins"},
+    {id:"fins-cave",nom:"Fins de cave",horsCuisine:true,parent:"g-boissons"},
+    {id:"spiritueux",nom:"Spiritueux & digestifs",horsCuisine:true,parent:"g-boissons"},
+    {id:"chaudes",nom:"Boissons chaudes",horsCuisine:true,parent:"g-boissons"},
+    {id:"boissons",nom:"Autres boissons",horsCuisine:true,parent:"g-boissons"}
   ],
   items:[
-    {id:'pl-terre',cat:'planches',nom:'La planche de la terre',prix:900,unite:'/ pers.',all:'9 \u00b7 10 \u00b7 12'},
-    {id:'pl-mer',cat:'planches',nom:'La planche de la mer',prix:900,unite:'/ pers.',all:'1 \u00b7 2 \u00b7 3 \u00b7 4 \u00b7 10 \u00b7 12'},
-    {id:'en-potage',cat:'entrees',nom:'Le potage du jour',prix:1000,all:'7 \u00b7 12'},
-    {id:'en-carpaccio',cat:'entrees',nom:'Carpaccio de b\u0153uf',prix:1300,all:'7'},
-    {id:'en-gravlax',cat:'entrees',nom:'Saumon gravlax',prix:1300,all:'1 \u00b7 4 \u00b7 7'},
-    {id:'en-foiegras',cat:'entrees',nom:'Foie gras maison',prix:1600,all:'1 \u00b7 3 \u00b7 7 \u00b7 12'},
-    {id:'en-langoustine',cat:'entrees',nom:'Croustillant de langoustine au basilic',prix:1600,all:'1 \u00b7 2 \u00b7 3'},
-    {id:'en-escargots',cat:'entrees',nom:'Escargots de Bourgogne',prix:1300,all:'7',variantes:[{nom:'6 pi\u00e8ces',prix:1300},{nom:'12 pi\u00e8ces',prix:2000}]},
-    {id:'en-meurette',cat:'entrees',nom:'\u0152uf en meurette 62 \u00b0C',prix:1100,all:'1 \u00b7 3 \u00b7 9 \u00b7 12'},
-    {id:'vi-mignon',cat:'viandes',nom:'Filet mignon de porc',prix:2100,all:'1 \u00b7 3 \u00b7 7 \u00b7 12'},
-    {id:'vi-vav',cat:'viandes',nom:'Vol-au-vent traditionnel',prix:2100,all:'1 \u00b7 3 \u00b7 7 \u00b7 12'},
-    {id:'vi-vavvo',cat:'viandes',nom:'Vol-au-vent du Val d\u2019Ornain',prix:2500,all:'1 \u00b7 3 \u00b7 7 \u00b7 12'},
-    {id:'vi-supreme',cat:'viandes',nom:'Supr\u00eame de poulet jaune',prix:2100,all:'1 \u00b7 3 \u00b7 7 \u00b7 9 \u00b7 12'},
-    {id:'vi-fauxfilet',cat:'viandes',nom:'Faux-filet du Grand Est 250 g',prix:2500,all:'1 \u00b7 3 \u00b7 7 \u00b7 12',opts:[{nom:'Cuisson',choix:CUISSONS},{nom:'Sauce',choix:SAUCES}]},
-    {id:'vi-entrecote',cat:'viandes',nom:'Entrec\u00f4te matur\u00e9e 250 g',prix:2900,all:'1 \u00b7 3 \u00b7 7 \u00b7 12',opts:[{nom:'Cuisson',choix:CUISSONS},{nom:'Sauce',choix:SAUCES}]},
-    {id:'vi-ris',cat:'viandes',nom:'Ris de veau dor\u00e9s',prix:3300,all:'7 \u00b7 9 \u00b7 12'},
-    {id:'ve-raviolis',cat:'vege',nom:'Raviolis ricotta et \u00e9pinards',prix:1800,all:'1 \u00b7 3 \u00b7 7 \u00b7 9'},
-    {id:'po-cassolette',cat:'poissons',nom:'Cassolette de la mer',prix:2100,all:'1 \u00b7 2 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12'},
-    {id:'po-saumon',cat:'poissons',nom:'Pav\u00e9 de saumon',prix:1900,all:'1 \u00b7 4 \u00b7 7'},
-    {id:'po-scampis',cat:'poissons',nom:'Scampis flamb\u00e9s \u00e0 la mandarine',prix:2100,all:'1 \u00b7 2 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12'},
-    {id:'po-daurade',cat:'poissons',nom:'Filet de daurade',prix:2200,all:'1 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12'},
-    {id:'pa-vege',cat:'paellas',nom:'Paella v\u00e9g\u00e9tale',prix:2000,unite:'/ pers.',all:'1'},
-    {id:'pa-paella',cat:'paellas',nom:'Paella',prix:2300,unite:'/ pers.',all:'1 \u00b7 2 \u00b7 4 \u00b7 14'},
-    {id:'fr-fromages',cat:'fromages',nom:'Les fromages de nos r\u00e9gions',prix:1000,all:'7 \u00b7 10 \u00b7 12'},
-    {id:'de-fondant',cat:'desserts',nom:'Fondant au chocolat',prix:1000,all:'1 \u00b7 3 \u00b7 7 \u00b7 8'},
-    {id:'de-creme',cat:'desserts',nom:'Cr\u00e8me br\u00fbl\u00e9e',prix:800,all:'3 \u00b7 7'},
-    {id:'de-profiteroles',cat:'desserts',nom:'Profiteroles de madeleines',prix:800,all:'\u00e0 confirmer'},
-    {id:'de-dame',cat:'desserts',nom:'Dame blanche',prix:800,all:'1 \u00b7 3 \u00b7 7 \u00b7 8'},
-    {id:'de-ananas',cat:'desserts',nom:'Ananas r\u00f4ti',prix:800,all:'3 \u00b7 7'},
-    {id:'de-mirabelle',cat:'desserts',nom:'Surprise autour de la mirabelle',prix:900,all:'3 \u00b7 7 \u00b7 8 \u00b7 12'},
-    {id:'fo-gourmande',cat:'formule',nom:'Formule gourmande',prix:3600,unite:'/ pers.',formule:[
-      {nom:'Entr\u00e9e',choix:['\u0152uf en meurette 62 \u00b0C','Saumon gravlax','Potage du jour','Foie gras']},
-      {nom:'Plat',choix:['Pav\u00e9 de saumon','Cassolette de la mer','Vol-au-vent traditionnel','Poulet jaune aux girolles','Mignon de porc tomates s\u00e9ch\u00e9es']},
-      {nom:'Dessert',choix:['Surprise mirabelle','Cr\u00e8me br\u00fbl\u00e9e','Fromages de nos r\u00e9gions','Ananas r\u00f4ti']}
-    ]}
-  ].concat([
-    {id:"vv-maldita-blanc",cat:"vins-verre",nom:"La Maldita blanc \u00b7 Rioja, Garnacha blanca",prix:500,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
-    {id:"vv-massonnay",cat:"vins-verre",nom:"J. Massonnay \u00b7 Bourgogne Chardonnay, L\u2019\u00c9motion Originelle",prix:600,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
-    {id:"vv-maldita-rose",cat:"vins-verre",nom:"La Maldita ros\u00e9 \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Ros\u00e9",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
-    {id:"vv-maldita-rouge",cat:"vins-verre",nom:"La Maldita rouge \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
-    {id:"vv-pierres-dorees",cat:"vins-verre",nom:"Vignerons des Pierres Dor\u00e9es \u00b7 Coteaux bourguignons, Les Lilis, 2024",prix:600,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
-    {id:"vv-arnoux",cat:"vins-verre",nom:"Arnoux et Fils \u00b7 C\u00f4tes du Rh\u00f4ne, Vieux Clocher, 2024",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"su-grenouilles-e",cat:"suggestions",nom:"Cuisses de grenouille en persillade \u00b7 6 pi\u00e8ces",prix:1400,all:"1 \u00b7 7"},
+    {id:"su-caille",cat:"suggestions",nom:"Terrine de caille \u00b7 mesclun et pickles de l\u00e9gumes",prix:1300,all:"3 \u00b7 7 \u00b7 12"},
+    {id:"su-civet",cat:"suggestions",nom:"Civet de sanglier \u00b7 choux de Bruxelles et \u00e9cras\u00e9 de pomme de terre",prix:2600,all:"1 \u00b7 7 \u00b7 12"},
+    {id:"su-stjacques",cat:"suggestions",nom:"Saint-Jacques snack\u00e9es \u00b7 pur\u00e9e de panais, tomb\u00e9e d\u2019\u00e9pinards, sauce corail",prix:2900,all:"4 \u00b7 7 \u00b7 12 \u00b7 14"},
+    {id:"su-grenouilles-p",cat:"suggestions",nom:"Cuisses de grenouille en plat \u00b7 9 pi\u00e8ces, grenaille et salade",prix:2100,all:"1 \u00b7 7 \u00b7 12"},
+    {id:"su-tiramisu",cat:"suggestions",nom:"Tiramisu aux marrons",prix:900,all:"7 \u00b7 8 \u00b7 13"},
+    {id:"pl-terre",cat:"planches",nom:"La planche de la terre",prix:900,all:"9 \u00b7 10 \u00b7 12",unite:"/ pers."},
+    {id:"pl-mer",cat:"planches",nom:"La planche de la mer",prix:900,all:"1 \u00b7 2 \u00b7 3 \u00b7 4 \u00b7 10 \u00b7 12",unite:"/ pers."},
+    {id:"en-potage",cat:"entrees",nom:"Le potage du jour",prix:1000,all:"7 \u00b7 12"},
+    {id:"en-carpaccio",cat:"entrees",nom:"Carpaccio de b\u0153uf",prix:1300,all:"7"},
+    {id:"en-gravlax",cat:"entrees",nom:"Saumon gravlax",prix:1300,all:"1 \u00b7 4 \u00b7 7"},
+    {id:"en-foiegras",cat:"entrees",nom:"Foie gras maison",prix:1600,all:"1 \u00b7 3 \u00b7 7 \u00b7 12"},
+    {id:"en-langoustine",cat:"entrees",nom:"Croustillant de langoustine au basilic",prix:1600,all:"1 \u00b7 2 \u00b7 3"},
+    {id:"en-escargots",cat:"entrees",nom:"Escargots de Bourgogne",prix:1300,all:"7",variantes:[{nom:"6 pi\u00e8ces",prix:1300},{nom:"12 pi\u00e8ces",prix:2000}]},
+    {id:"en-meurette",cat:"entrees",nom:"\u0152uf en meurette 62 \u00b0C",prix:1100,all:"1 \u00b7 3 \u00b7 9 \u00b7 12"},
+    {id:"vi-mignon",cat:"viandes",nom:"Filet mignon de porc",prix:2100,all:"1 \u00b7 3 \u00b7 7 \u00b7 12"},
+    {id:"vi-vav",cat:"viandes",nom:"Vol-au-vent traditionnel",prix:2100,all:"1 \u00b7 3 \u00b7 7 \u00b7 12"},
+    {id:"vi-vavvo",cat:"viandes",nom:"Vol-au-vent du Val d\u2019Ornain",prix:2500,all:"1 \u00b7 3 \u00b7 7 \u00b7 12"},
+    {id:"vi-supreme",cat:"viandes",nom:"Supr\u00eame de poulet jaune",prix:2100,all:"1 \u00b7 3 \u00b7 7 \u00b7 9 \u00b7 12"},
+    {id:"vi-fauxfilet",cat:"viandes",nom:"Faux-filet du Grand Est 250 g",prix:2500,all:"1 \u00b7 3 \u00b7 7 \u00b7 12",opts:[{nom:"Cuisson",choix:CUISSONS},{nom:"Sauce",choix:SAUCES}]},
+    {id:"vi-entrecote",cat:"viandes",nom:"Entrec\u00f4te matur\u00e9e 250 g",prix:2900,all:"1 \u00b7 3 \u00b7 7 \u00b7 12",opts:[{nom:"Cuisson",choix:CUISSONS},{nom:"Sauce",choix:SAUCES}]},
+    {id:"vi-ris",cat:"viandes",nom:"Ris de veau dor\u00e9s",prix:3300,all:"7 \u00b7 9 \u00b7 12"},
+    {id:"ve-raviolis",cat:"vege",nom:"Raviolis ricotta et \u00e9pinards",prix:1800,all:"1 \u00b7 3 \u00b7 7 \u00b7 9"},
+    {id:"po-cassolette",cat:"poissons",nom:"Cassolette de la mer",prix:2100,all:"1 \u00b7 2 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12"},
+    {id:"po-saumon",cat:"poissons",nom:"Pav\u00e9 de saumon",prix:1900,all:"1 \u00b7 4 \u00b7 7"},
+    {id:"po-scampis",cat:"poissons",nom:"Scampis flamb\u00e9s \u00e0 la mandarine",prix:2100,all:"1 \u00b7 2 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12"},
+    {id:"po-daurade",cat:"poissons",nom:"Filet de daurade",prix:2200,all:"1 \u00b7 4 \u00b7 7 \u00b7 9 \u00b7 12"},
+    {id:"pa-vege",cat:"paellas",nom:"Paella v\u00e9g\u00e9tale",prix:2000,all:"1",unite:"/ pers."},
+    {id:"pa-paella",cat:"paellas",nom:"Paella",prix:2300,all:"1 \u00b7 2 \u00b7 4 \u00b7 14",unite:"/ pers."},
+    {id:"fr-fromages",cat:"fromages",nom:"Les fromages de nos r\u00e9gions",prix:1000,all:"7 \u00b7 10 \u00b7 12"},
+    {id:"de-fondant",cat:"desserts",nom:"Fondant au chocolat",prix:1000,all:"1 \u00b7 3 \u00b7 7 \u00b7 8"},
+    {id:"de-creme",cat:"desserts",nom:"Cr\u00e8me br\u00fbl\u00e9e",prix:800,all:"3 \u00b7 7"},
+    {id:"de-profiteroles",cat:"desserts",nom:"Profiteroles de madeleines",prix:800,all:"\u00e0 confirmer"},
+    {id:"de-dame",cat:"desserts",nom:"Dame blanche",prix:800,all:"1 \u00b7 3 \u00b7 7 \u00b7 8"},
+    {id:"de-ananas",cat:"desserts",nom:"Ananas r\u00f4ti",prix:800,all:"3 \u00b7 7"},
+    {id:"de-mirabelle",cat:"desserts",nom:"Surprise autour de la mirabelle",prix:900,all:"3 \u00b7 7 \u00b7 8 \u00b7 12"},
+    {id:"fo-gourmande",cat:"formule",nom:"Formule gourmande",prix:3900,unite:"/ pers.",formule:[{nom:"Entr\u00e9e",choix:["\u0152uf en meurette", "Saumon gravlax", "Potage du jour", "Foie gras (petite portion)"]},{nom:"Plat",choix:["Pav\u00e9 de saumon", "Cassolette de la mer", "Vol-au-vent traditionnel", "Poulet jaune aux girolles", "Faux-filet"]},{nom:"Dessert",choix:["Surprise mirabelle", "Cr\u00e8me br\u00fbl\u00e9e", "Fromages de nos r\u00e9gions", "Ananas r\u00f4ti"]}]},
     {id:"bt-aperitif-maison-methode-traditionnelle-c",cat:"aperitifs",nom:"Ap\u00e9ritif maison \u00b7 M\u00e9thode traditionnelle, cr\u00e8me de mirabelle, mirabelle",prix:600,tva:20},
     {id:"bt-coupe-de-champagne-jaillant-blanc-de-bla",cat:"aperitifs",nom:"Coupe de champagne \u00b7 Jaillant, Blanc de Blancs",prix:900,tva:20},
     {id:"bt-kir-vin-blanc-creme-de-cassis",cat:"aperitifs",nom:"Kir \u00b7 Vin blanc, cr\u00e8me de cassis",prix:700,tva:20},
@@ -351,7 +370,6 @@ var CARTE_ORIGINE={
     {id:"bt-suze-ou-cynar-5-cl",cat:"aperitifs",nom:"Suze ou Cynar 5 cl",prix:500,tva:20,opts:[{nom:"Ap\u00e9ritif",choix:["Suze", "Cynar"]}]},
     {id:"bt-campari-5-cl",cat:"aperitifs",nom:"Campari 5 cl",prix:500,tva:20},
     {id:"bt-ricard-2-cl",cat:"aperitifs",nom:"Ricard 2 cl",prix:500,tva:20},
-    {id:"bt-spritz",cat:"aperitifs",nom:"Spritz",prix:800,tva:20,opts:[{nom:"Spritz",choix:["Aperol", "Campari"]}]},
     {id:"bt-picon-vin-blanc",cat:"aperitifs",nom:"Picon vin blanc",prix:600,tva:20},
     {id:"bt-1664-blonde-pression",cat:"bieres",nom:"1664 Blonde \u00b7 Pression",prix:450,tva:20,variantes:[{nom:"25 cl",prix:450},{nom:"33 cl",prix:550},{nom:"50 cl",prix:700}]},
     {id:"bt-grimbergen-blonde-6-7-pression",cat:"bieres",nom:"Grimbergen Blonde 6,7\u00b0 \u00b7 Pression",prix:500,tva:20,variantes:[{nom:"25 cl",prix:500},{nom:"33 cl",prix:600},{nom:"50 cl",prix:850}]},
@@ -375,82 +393,155 @@ var CARTE_ORIGINE={
     {id:"bt-calvados-avallen-4-cl-pays-dauge",cat:"spiritueux",nom:"Calvados Avallen 4 cl \u00b7 Pays d\u2019Auge",prix:700,tva:20},
     {id:"bt-haut-armagnac-4-cl-chateau-arton-la-rese",cat:"spiritueux",nom:"Haut-Armagnac 4 cl \u00b7 Ch\u00e2teau Arton, La R\u00e9serve",prix:800,tva:20},
     {id:"bt-eau-de-vie-4-cl",cat:"spiritueux",nom:"Eau-de-vie 4 cl",prix:700,tva:20,opts:[{nom:"Eau-de-vie",choix:["Mirabelle", "Poire", "Framboise"]}]},
-    {id:"bt-liqueur-4-cl",cat:"spiritueux",nom:"Liqueur 4 cl",prix:600,tva:20,opts:[{nom:"Liqueur",choix:["Cointreau", "Grand Marnier", "Amaretto", "Sambuca", "Averna", "Limoncello", "Baileys", "Anis"]}]},
+    {id:"bt-liqueur-4-cl",cat:"spiritueux",nom:"Liqueur 4 cl",prix:600,tva:20,opts:[{nom:"Liqueur",choix:["Cointreau", "Grand Marnier", "Amaretto", "Sambuca", "Averna", "Limoncello", "Baileys"]}]},
     {id:"bt-accompagnement-pour-allonger-un-spiritue",cat:"spiritueux",nom:"Accompagnement \u00b7 Pour allonger un spiritueux",prix:200,tva:20,opts:[{nom:"Avec",choix:["Coca", "Jus d\u2019orange", "Tonic"]}]},
     {id:"bt-cafe",cat:"chaudes",nom:"Caf\u00e9",prix:220,tva:10,opts:[{nom:"Caf\u00e9",choix:["Expresso", "D\u00e9caf\u00e9in\u00e9"]}]},
     {id:"bt-cafe-creme",cat:"chaudes",nom:"Caf\u00e9 cr\u00e8me",prix:300,tva:10},
     {id:"bt-the-ou-infusion-cafe-richard",cat:"chaudes",nom:"Th\u00e9 ou infusion \u00b7 Caf\u00e9 Richard",prix:300,tva:10,opts:[{nom:"Boisson",choix:["Th\u00e9", "Infusion"]}]},
     {id:"bt-irish-coffee-whisky-cafe-creme",cat:"chaudes",nom:"Irish coffee \u00b7 Whisky, caf\u00e9, cr\u00e8me",prix:800,tva:20},
     {id:"bt-french-coffee-cognac-cafe-creme",cat:"chaudes",nom:"French coffee \u00b7 Cognac, caf\u00e9, cr\u00e8me",prix:800,tva:20},
+    {id:"ck-mojito",cat:"cocktails",nom:"Mojito \u00b7 Rhum, citron vert, menthe, sucre de canne, Prosecco",prix:900,tva:20,reg:"Cocktails"},
+    {id:"ck-negroni",cat:"cocktails",nom:"Negroni \u00b7 Campari, Martini rouge, gin",prix:900,tva:20,reg:"Cocktails"},
+    {id:"ck-moscow-mule",cat:"cocktails",nom:"Moscow Mule \u00b7 Vodka, Fever-Tree gingembre",prix:900,tva:20,reg:"Cocktails"},
+    {id:"ck-jamaican-mule",cat:"cocktails",nom:"Jamaican Mule \u00b7 Rhum, Fever-Tree gingembre",prix:900,tva:20,reg:"Cocktails"},
+    {id:"ck-aperol-spritz",cat:"cocktails",nom:"Aperol Spritz \u00b7 Prosecco, Aperol, eau p\u00e9tillante, orange",prix:800,tva:20,reg:"Spritz"},
+    {id:"ck-campari-spritz",cat:"cocktails",nom:"Campari Spritz \u00b7 Prosecco, Campari, eau p\u00e9tillante, orange",prix:800,tva:20,reg:"Spritz"},
+    {id:"ck-limoncello-spritz",cat:"cocktails",nom:"Limoncello Spritz \u00b7 Prosecco, Limoncello, eau p\u00e9tillante, citron",prix:800,tva:20,reg:"Spritz"},
+    {id:"ck-hugo-spritz",cat:"cocktails",nom:"Hugo Spritz \u00b7 Prosecco, sirop de sureau, menthe, citron vert",prix:900,tva:20,reg:"Spritz"},
+    {id:"ck-virgin-mojito",cat:"cocktails",nom:"Virgin Mojito \u00b7 Citron vert, menthe, sucre de canne, jus de pomme, eau p\u00e9tillante",prix:700,tva:10,reg:"Sans alcool"},
+    {id:"ck-crodino",cat:"cocktails",nom:"Crodino \u00b7 Crodino, eau p\u00e9tillante",prix:700,tva:10,reg:"Sans alcool"},
+    {id:"ck-sunset-tropical",cat:"cocktails",nom:"Sunset tropical \u00b7 Jus multifruit, sirop de grenadine",prix:600,tva:10,reg:"Sans alcool"},
+    {id:"vv-j-massonnay-blanc-chardonnay-lemotion-or",cat:"vins-verre",nom:"J. Massonnay blanc \u00b7 Chardonnay, l\u2019Emotion Originelle",prix:600,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
+    {id:"vv-la-maldita-blanc-rioja-garnacha-blanca",cat:"vins-verre",nom:"La Maldita blanc \u00b7 Rioja, Garnacha blanca",prix:500,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-vignerons-de-buxy-blanc-bourgogne-aligot",cat:"vins-verre",nom:"Vignerons de Buxy blanc \u00b7 Bourgogne Aligot\u00e9, Buissonnier, 2024",prix:500,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-colombelle-blanc-cotes-de-gascogne-charm",cat:"vins-verre",nom:"Colombelle blanc \u00b7 C\u00f4tes de Gascogne, Charmes Gros Manseng",prix:500,tva:20,reg:"Blanc",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-la-maldita-rose-rioja-garnacha",cat:"vins-verre",nom:"La Maldita ros\u00e9 \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Ros\u00e9",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-vin-de-pays-des-maures-rose-cotes-de-pro",cat:"vins-verre",nom:"Vin de Pays des Maures ros\u00e9 \u00b7 C\u00f4tes de Provence, Cap des Pins n\u00b0 2",prix:600,tva:20,reg:"Ros\u00e9",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
+    {id:"vv-la-maldita-rouge-rioja-garnacha",cat:"vins-verre",nom:"La Maldita rouge \u00b7 Rioja, Garnacha",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
+    {id:"vv-vignerons-des-pierres-dorees-rouge-les-l",cat:"vins-verre",nom:"Vignerons des pierres dor\u00e9es rouge \u00b7 Les Lilis, 2024",prix:600,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:600},{nom:"Pichet 25 cl",prix:1000},{nom:"Pichet 50 cl",prix:1700}]},
+    {id:"vv-arnoux-et-fils-rouge-vieux-clocher-2024",cat:"vins-verre",nom:"Arnoux et Fils rouge \u00b7 Vieux Clocher, 2024",prix:500,tva:20,reg:"Rouge",variantes:[{nom:"Verre 12 cl",prix:500},{nom:"Pichet 25 cl",prix:850},{nom:"Pichet 50 cl",prix:1400}]},
     {id:"vin-mailly-grand-cru-brut-grand-cru",cat:"champagnes",nom:"Mailly Grand Cru \u00b7 Brut Grand Cru",prix:8400,tva:20,reg:"Champagne"},
-    {id:"vin-beaugrand-extra-brut-le-grand-carre-blan",cat:"champagnes",nom:"Beaugrand \u00b7 Extra Brut, Le Grand Carr\u00e9, Blanc de Blancs",prix:11900,tva:20,reg:"Champagne"},
+    {id:"vin-beaugrand-extra-brut-le-grand-carre-blanc-de",cat:"champagnes",nom:"Beaugrand \u00b7 Extra Brut, Le Grand Carr\u00e9, Blanc de Blancs",prix:11900,tva:20,reg:"Champagne"},
     {id:"vin-piper-heidsieck-brut-rose",cat:"champagnes",nom:"Piper-Heidsieck \u00b7 Brut ros\u00e9",prix:12600,tva:20,reg:"Champagne"},
     {id:"vin-moet-chandon-brut-imperial",cat:"champagnes",nom:"Mo\u00ebt & Chandon \u00b7 Brut, Imp\u00e9rial",prix:14500,tva:20,reg:"Champagne"},
     {id:"vin-piper-heidsieck-brut-vintage-2018",cat:"champagnes",nom:"Piper-Heidsieck \u00b7 Brut Vintage, 2018",prix:16800,tva:20,reg:"Champagne"},
     {id:"vin-ruinart-brut-r-de-ruinart",cat:"champagnes",nom:"Ruinart \u00b7 Brut, \u00ab R \u00bb de Ruinart",prix:18500,tva:20,reg:"Champagne"},
-    {id:"vin-domaine-klipfel-riesling",cat:"vins-blancs",nom:"Riesling \u00b7 Domaine Klipfel",prix:3300,tva:20,reg:"Alsace"},
-    {id:"vin-domaine-klipfel-pinot-gris",cat:"vins-blancs",nom:"Pinot Gris \u00b7 Domaine Klipfel",prix:3600,tva:20,reg:"Alsace"},
-    {id:"vin-domaine-klipfel-gewurztraminer-vendanges",cat:"vins-blancs",nom:"Gewurztraminer, Vendanges Tardives \u00b7 Domaine Klipfel",prix:10500,tva:20,reg:"Alsace"},
-    {id:"vin-ducroux-sancerre",cat:"vins-blancs",nom:"Sancerre \u00b7 Ducroux",prix:5000,tva:20,reg:"Loire"},
-    {id:"vin-domaine-chollet-pouilly-fume",cat:"vins-blancs",nom:"Pouilly-Fum\u00e9 \u00b7 Domaine Chollet",prix:5800,tva:20,reg:"Loire"},
-    {id:"vin-cuvee-gogane-cabernet-d-anjou",cat:"vins-roses",nom:"Cabernet d\u2019Anjou \u00b7 Cuv\u00e9e Gogane",prix:2000,tva:20,reg:"Loire"},
-    {id:"vin-domaine-du-clos-godeaux-chinon",cat:"vins-rouges",nom:"Chinon \u00b7 Domaine du Clos Godeaux",prix:2800,tva:20,reg:"Loire"},
-    {id:"vin-clos-des-morains-saumur-champigny",cat:"vins-rouges",nom:"Saumur-Champigny \u00b7 Clos des Morains",prix:2800,tva:20,reg:"Loire"},
-    {id:"vin-domaine-de-fondis-saint-nicolas-de-bourg",cat:"vins-rouges",nom:"Saint-Nicolas-de-Bourgueil \u00b7 Domaine de Fondis",prix:2900,tva:20,reg:"Loire"},
-    {id:"vin-domaine-passy-le-clou-chablis",cat:"vins-blancs",nom:"Chablis \u00b7 Domaine Passy Le Clou",prix:5700,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
-    {id:"vin-bourgogne-epineuil-cuvee-4-saisons",cat:"vins-rouges",nom:"Cuv\u00e9e 4 Saisons \u00b7 Bourgogne \u00c9pineuil",prix:4100,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
-    {id:"vin-bailly-irancy",cat:"vins-rouges",nom:"Irancy \u00b7 Bailly",prix:6000,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
-    {id:"vin-domaine-piguet-chouet-meursault-anne-mar",cat:"vins-blancs",nom:"Meursault, Anne-Marye, 2024 \u00b7 Domaine Piguet-Chouet",prix:17900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-domaine-grachet-duchemin-hautes-cotes-de",cat:"vins-rouges",nom:"Hautes-C\u00f4tes de Beaune, \u00c9mile Grachet \u00b7 Domaine Grachet-Duchemin",prix:5500,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-denis-chorey-les-beaune-2023",cat:"vins-rouges",nom:"Chorey-l\u00e8s-Beaune, 2023 \u00b7 Denis",prix:8900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-chateau-de-pommard-pommard-cuvee-emilie-",cat:"vins-rouges",nom:"Pommard, Cuv\u00e9e \u00c9milie, bio, 2022 \u00b7 Ch\u00e2teau de Pommard",prix:12000,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-stephane-brocard-aloxe-corton-meuneveaux",cat:"vins-rouges",nom:"Aloxe-Corton, Meuneveaux, 2022 \u00b7 St\u00e9phane Brocard",prix:12800,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-roblot-marchand-gevrey-chambertin-croix-",cat:"vins-rouges",nom:"Gevrey-Chambertin, Croix des Champs, 2022 \u00b7 Roblot-Marchand",prix:13900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-edouard-delaunay-nuits-saint-georges-1er",cat:"vins-rouges",nom:"Nuits-Saint-Georges 1er Cru, Les Crots, bio, 2019 \u00b7 \u00c9douard Delaunay",prix:22600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
-    {id:"vin-cave-de-lugny-macon-lugny-les-charmes",cat:"vins-blancs",nom:"M\u00e2con-Lugny, Les Charmes \u00b7 Cave de Lugny",prix:3600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-cave-de-prisse-saint-veran-les-sentinell",cat:"vins-blancs",nom:"Saint-V\u00e9ran, Les Sentinelles, 2023 \u00b7 Cave de Priss\u00e9",prix:4600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-vignerons-de-buxy-montagny-1er-cru-les-c",cat:"vins-blancs",nom:"Montagny 1er Cru, Les Co\u00e8res, 2022 \u00b7 Vignerons de Buxy",prix:5800,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-cave-de-prisse-pouilly-fuisse",cat:"vins-blancs",nom:"Pouilly-Fuiss\u00e9 \u00b7 Cave de Priss\u00e9",prix:6300,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-domaine-michaud-frere-s-ur-rully-la-chau",cat:"vins-blancs",nom:"Rully, La Chaume, 2022 \u00b7 Domaine Michaud Fr\u00e8re & S\u0153ur",prix:6400,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-cave-de-prisse-macon-chateau-du-charnay",cat:"vins-rouges",nom:"M\u00e2con, Ch\u00e2teau du Charnay \u00b7 Cave de Priss\u00e9",prix:3000,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-cave-de-buxy-givry-1er-cru-steinmaier-20",cat:"vins-rouges",nom:"Givry 1er Cru, Steinmaier, 2023 \u00b7 Cave de Buxy",prix:7100,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-domaine-tremeaux-mercurey-1er-cru-les-cr",cat:"vins-rouges",nom:"Mercurey 1er Cru, Les Croichots, 2024 \u00b7 Domaine Tremeaux",prix:7500,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
-    {id:"vin-jambon-morgon-douby",cat:"vins-rouges",nom:"Morgon, Douby \u00b7 Jambon",prix:3200,tva:20,reg:"Beaujolais"},
-    {id:"vin-jambon-moulin-a-vent-les-bois-combes",cat:"vins-rouges",nom:"Moulin-\u00e0-Vent, Les Bois Combes \u00b7 Jambon",prix:3400,tva:20,reg:"Beaujolais"},
-    {id:"vin-mommessin-julienas-grandes-mises",cat:"vins-rouges",nom:"Juli\u00e9nas, Grandes Mises \u00b7 Mommessin",prix:4000,tva:20,reg:"Beaujolais"},
-    {id:"vin-mommessin-saint-amour-grandes-mises",cat:"vins-rouges",nom:"Saint-Amour, Grandes Mises \u00b7 Mommessin",prix:4500,tva:20,reg:"Beaujolais"},
-    {id:"vin-tardieu-laurent-saint-joseph-les-ramades",cat:"vins-blancs",nom:"Saint-Joseph, Les Ramades \u00b7 Tardieu-Laurent",prix:7800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-cuvee-royale-tavel",cat:"vins-roses",nom:"Tavel \u00b7 Cuv\u00e9e Royale",prix:3600,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-tardieu-laurent-vacqueyras-les-lauzieres",cat:"vins-rouges",nom:"Vacqueyras, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:5800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-ogier-crozes-hermitage-l-orientale-les-p",cat:"vins-rouges",nom:"Crozes-Hermitage, L\u2019Orientale, Les Paillanches \u00b7 Ogier",prix:6200,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-tardieu-laurent-saint-joseph-les-lauzier",cat:"vins-rouges",nom:"Saint-Joseph, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:7800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-tardieu-laurent-chateauneuf-du-pape-les-",cat:"vins-rouges",nom:"Ch\u00e2teauneuf-du-Pape, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:12700,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-tardieu-laurent-cote-rotie-les-lauzieres",cat:"vins-rouges",nom:"C\u00f4te-R\u00f4tie, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:17000,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
-    {id:"vin-chateau-lauzade-cotes-de-provence-2024",cat:"vins-roses",nom:"C\u00f4tes de Provence, 2024 \u00b7 Ch\u00e2teau Lauzade",prix:3800,tva:20,reg:"Provence"},
-    {id:"vin-moulin-de-la-roque-bandol-les-baumes",cat:"vins-roses",nom:"Bandol, Les Baumes \u00b7 Moulin de la Roque",prix:4600,tva:20,reg:"Provence"},
-    {id:"vin-jardin-de-corbieres-corbieres-bio",cat:"vins-blancs",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1700,tva:20,reg:"Languedoc"},
-    {id:"vin-jardin-de-corbieres-corbieres-biox",cat:"vins-rouges",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1900,tva:20,reg:"Languedoc"},
-    {id:"vin-le-mas-du-rollier-terrasses-du-larzac-bi",cat:"vins-rouges",nom:"Terrasses du Larzac, bio \u00b7 Le Mas du Rollier",prix:3300,tva:20,reg:"Languedoc"},
-    {id:"vin-chateau-d-argens-minervois-chant-de-lune",cat:"vins-rouges",nom:"Minervois, Chant de Lune, biodynamie \u00b7 Ch\u00e2teau d\u2019Argens",prix:3700,tva:20,reg:"Languedoc"},
-    {id:"vin-colombelle-cotes-de-gascogne-origin",cat:"vins-blancs",nom:"C\u00f4tes de Gascogne, Origin \u00b7 Colombelle",prix:1700,tva:20,reg:"Sud-Ouest"},
-    {id:"vin-plaimont-pacherenc-du-vic-bilh-moelleux-",cat:"vins-blancs",nom:"Pacherenc du Vic-Bilh moelleux, Collection \u00b7 Plaimont",prix:4100,tva:20,reg:"Sud-Ouest"},
-    {id:"vin-plaimont-madiran-maestria",cat:"vins-rouges",nom:"Madiran, Maestria \u00b7 Plaimont",prix:2800,tva:20,reg:"Sud-Ouest"},
-    {id:"vin-la-maldita-rioja-garnacha-blanca",cat:"vins-blancs",nom:"Rioja, Garnacha blanca \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
-    {id:"vin-la-maldita-rioja-garnacha",cat:"vins-roses",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
-    {id:"vin-la-maldita-rioja-garnachax",cat:"vins-rouges",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
-    {id:"vin-chateau-lamothe-cissac-haut-medoc-cru-bo",cat:"vins-rouges",nom:"Haut-M\u00e9doc, Cru Bourgeois \u00b7 Ch\u00e2teau Lamothe-Cissac",prix:3800,tva:20,reg:"Bordeaux"},
-    {id:"vin-fortin-plaisance-saint-emilion-2023",cat:"vins-rouges",nom:"Saint-\u00c9milion, 2023 \u00b7 Fortin Plaisance",prix:4200,tva:20,reg:"Bordeaux"},
-    {id:"vin-ondulations-cotes-de-bourg",cat:"vins-rouges",nom:"C\u00f4tes de Bourg \u00b7 Ondulations",prix:4300,tva:20,reg:"Bordeaux"},
-    {id:"vin-leo-colombier-brown-pessac-leognan-2021",cat:"vins-rouges",nom:"Pessac-L\u00e9ognan, 2021 \u00b7 L\u00e9o Colombier Brown",prix:7000,tva:20,reg:"Bordeaux"},
-    {id:"vin-heritage-de-le-boscq-saint-estephe",cat:"vins-rouges",nom:"Saint-Est\u00e8phe \u00b7 H\u00e9ritage de Le Boscq",prix:7100,tva:20,reg:"Bordeaux"},
-    {id:"vin-fleur-de-pedesclaux-pauillac",cat:"vins-rouges",nom:"Pauillac \u00b7 Fleur de Pedesclaux",prix:8200,tva:20,reg:"Bordeaux"},
-    {id:"vin-zede-de-labegorce-margaux-2022",cat:"vins-rouges",nom:"Margaux, 2022 \u00b7 Z\u00e8de de Lab\u00e9gorce",prix:9000,tva:20,reg:"Bordeaux"},
-    {id:"vin-goulee-by-cos-d-estournel-medoc-2018",cat:"vins-rouges",nom:"M\u00e9doc, 2018 \u00b7 Goul\u00e9e by Cos d\u2019Estournel",prix:9600,tva:20,reg:"Bordeaux"},
-    {id:"vin-l-aspirant-de-beychevelle-saint-julien-2",cat:"vins-rouges",nom:"Saint-Julien, 2023 \u00b7 L\u2019Aspirant de Beychevelle",prix:10800,tva:20,reg:"Bordeaux"},
-    {id:"vin-carillon-de-rouget-pomerol-second-vin-du",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"}
-  ])
+    {id:"vin-riesling-domaine-klipfel",cat:"vins-blancs",nom:"Riesling \u00b7 Domaine Klipfel",prix:3300,tva:20,reg:"Alsace"},
+    {id:"vin-pinot-gris-domaine-klipfel",cat:"vins-blancs",nom:"Pinot Gris \u00b7 Domaine Klipfel",prix:3600,tva:20,reg:"Alsace"},
+    {id:"vin-gewurztraminer-vendanges-tardives-domaine-kl",cat:"vins-blancs",nom:"Gewurztraminer, Vendanges Tardives \u00b7 Domaine Klipfel",prix:10500,tva:20,reg:"Alsace"},
+    {id:"vin-sancerre-ducroux",cat:"vins-blancs",nom:"Sancerre \u00b7 Ducroux",prix:5000,tva:20,reg:"Loire"},
+    {id:"vin-pouilly-fume-domaine-chollet",cat:"vins-blancs",nom:"Pouilly-Fum\u00e9 \u00b7 Domaine Chollet",prix:5800,tva:20,reg:"Loire"},
+    {id:"vin-cabernet-danjou-cuvee-gogane",cat:"vins-roses",nom:"Cabernet d\u2019Anjou \u00b7 Cuv\u00e9e Gogane",prix:2000,tva:20,reg:"Loire"},
+    {id:"vin-chinon-domaine-du-clos-godeaux",cat:"vins-rouges",nom:"Chinon \u00b7 Domaine du Clos Godeaux",prix:2800,tva:20,reg:"Loire"},
+    {id:"vin-saumur-champigny-clos-des-morains",cat:"vins-rouges",nom:"Saumur-Champigny \u00b7 Clos des Morains",prix:2800,tva:20,reg:"Loire"},
+    {id:"vin-saint-nicolas-de-bourgueil-domaine-de-fondis",cat:"vins-rouges",nom:"Saint-Nicolas-de-Bourgueil \u00b7 Domaine de Fondis",prix:2900,tva:20,reg:"Loire"},
+    {id:"vin-piper-heidsieck-brut-essentiel",cat:"champagnes",nom:"Piper-Heidsieck \u00b7 Brut, Essentiel",prix:9900,tva:20,reg:"Champagne"},
+    {id:"vin-chablis-domaine-passy-le-clou",cat:"vins-blancs",nom:"Chablis \u00b7 Domaine Passy Le Clou",prix:5700,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
+    {id:"vin-bourgogne-epineuil-cuvee-4-saisons",cat:"vins-rouges",nom:"Bourgogne \u00c9pineuil \u00b7 Cuv\u00e9e 4 Saisons",prix:4100,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
+    {id:"vin-irancy-bailly",cat:"vins-rouges",nom:"Irancy \u00b7 Bailly",prix:6000,tva:20,reg:"Bourgogne \u00b7 Chablisien & Auxerrois"},
+    {id:"vin-meursault-anne-marye-2024-domaine-piguet-cho",cat:"vins-blancs",nom:"Meursault, Anne-Marye, 2024 \u00b7 Domaine Piguet-Chouet",prix:17900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-hautes-cotes-de-beaune-emile-grachet-domaine",cat:"vins-rouges",nom:"Hautes-C\u00f4tes de Beaune, \u00c9mile Grachet \u00b7 Domaine Grachet-Duchemin",prix:5500,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-chorey-les-beaune-2023-denis",cat:"vins-rouges",nom:"Chorey-l\u00e8s-Beaune, 2023 \u00b7 Denis",prix:8900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-pommard-cuvee-emilie-bio-2022-chateau-de-pom",cat:"vins-rouges",nom:"Pommard, Cuv\u00e9e \u00c9milie, bio, 2022 \u00b7 Ch\u00e2teau de Pommard",prix:12000,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-aloxe-corton-meuneveaux-2022-stephane-brocar",cat:"vins-rouges",nom:"Aloxe-Corton, Meuneveaux, 2022 \u00b7 St\u00e9phane Brocard",prix:12800,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-gevrey-chambertin-croix-des-champs-2022-robl",cat:"vins-rouges",nom:"Gevrey-Chambertin, Croix des Champs, 2022 \u00b7 Roblot-Marchand",prix:13900,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-nuits-saint-georges-1er-cru-les-crots-bio-20",cat:"vins-rouges",nom:"Nuits-Saint-Georges 1er Cru, Les Crots, bio, 2019 \u00b7 \u00c9douard Delaunay",prix:22600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te de Nuits & C\u00f4te de Beaune"},
+    {id:"vin-macon-lugny-les-charmes-cave-de-lugny",cat:"vins-blancs",nom:"M\u00e2con-Lugny, Les Charmes \u00b7 Cave de Lugny",prix:3600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-saint-veran-les-sentinelles-2023-cave-de-pri",cat:"vins-blancs",nom:"Saint-V\u00e9ran, Les Sentinelles, 2023 \u00b7 Cave de Priss\u00e9",prix:4600,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-montagny-1er-cru-les-coeres-2022-vignerons-d",cat:"vins-blancs",nom:"Montagny 1er Cru, Les Co\u00e8res, 2022 \u00b7 Vignerons de Buxy",prix:5800,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-pouilly-fuisse-cave-de-prisse",cat:"vins-blancs",nom:"Pouilly-Fuiss\u00e9 \u00b7 Cave de Priss\u00e9",prix:6300,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-rully-la-chaume-2022-domaine-michaud-frere-s",cat:"vins-blancs",nom:"Rully, La Chaume, 2022 \u00b7 Domaine Michaud Fr\u00e8re & S\u0153ur",prix:6400,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-macon-chateau-du-charnay-cave-de-prisse",cat:"vins-rouges",nom:"M\u00e2con, Ch\u00e2teau du Charnay \u00b7 Cave de Priss\u00e9",prix:3000,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-givry-1er-cru-steinmaier-2023-cave-de-buxy",cat:"vins-rouges",nom:"Givry 1er Cru, Steinmaier, 2023 \u00b7 Cave de Buxy",prix:7100,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-mercurey-1er-cru-les-croichots-2024-domaine-",cat:"vins-rouges",nom:"Mercurey 1er Cru, Les Croichots, 2024 \u00b7 Domaine Tremeaux",prix:7500,tva:20,reg:"Bourgogne \u00b7 C\u00f4te chalonnaise & M\u00e2connais"},
+    {id:"vin-morgon-douby-jambon",cat:"vins-rouges",nom:"Morgon, Douby \u00b7 Jambon",prix:3200,tva:20,reg:"Beaujolais"},
+    {id:"vin-moulin-a-vent-les-bois-combes-jambon",cat:"vins-rouges",nom:"Moulin-\u00e0-Vent, Les Bois Combes \u00b7 Jambon",prix:3400,tva:20,reg:"Beaujolais"},
+    {id:"vin-julienas-grandes-mises-mommessin",cat:"vins-rouges",nom:"Juli\u00e9nas, Grandes Mises \u00b7 Mommessin",prix:4000,tva:20,reg:"Beaujolais"},
+    {id:"vin-saint-amour-grandes-mises-mommessin",cat:"vins-rouges",nom:"Saint-Amour, Grandes Mises \u00b7 Mommessin",prix:4500,tva:20,reg:"Beaujolais"},
+    {id:"vin-saint-joseph-les-ramades-tardieu-laurent",cat:"vins-blancs",nom:"Saint-Joseph, Les Ramades \u00b7 Tardieu-Laurent",prix:7800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-tavel-cuvee-royale",cat:"vins-roses",nom:"Tavel \u00b7 Cuv\u00e9e Royale",prix:3600,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-vacqueyras-les-lauzieres-tardieu-laurent",cat:"vins-rouges",nom:"Vacqueyras, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:5800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-crozes-hermitage-lorientale-les-paillanches-",cat:"vins-rouges",nom:"Crozes-Hermitage, L\u2019Orientale, Les Paillanches \u00b7 Ogier",prix:6200,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-saint-joseph-les-lauzieres-tardieu-laurent",cat:"vins-rouges",nom:"Saint-Joseph, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:7800,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-chateauneuf-du-pape-les-lauzieres-tardieu-la",cat:"vins-rouges",nom:"Ch\u00e2teauneuf-du-Pape, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:12700,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-cote-rotie-les-lauzieres-tardieu-laurent",cat:"vins-rouges",nom:"C\u00f4te-R\u00f4tie, Les Lauzi\u00e8res \u00b7 Tardieu-Laurent",prix:17000,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"vin-cotes-de-provence-2024-chateau-lauzade",cat:"vins-roses",nom:"C\u00f4tes de Provence, 2024 \u00b7 Ch\u00e2teau Lauzade",prix:3800,tva:20,reg:"Provence"},
+    {id:"vin-bandol-les-baumes-moulin-de-la-roque",cat:"vins-roses",nom:"Bandol, Les Baumes \u00b7 Moulin de la Roque",prix:4600,tva:20,reg:"Provence"},
+    {id:"vin-corbieres-bio-jardin-de-corbieres",cat:"vins-blancs",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1700,tva:20,reg:"Languedoc"},
+    {id:"vin-corbieres-bio-jardin-de-corbieresx",cat:"vins-rouges",nom:"Corbi\u00e8res, bio \u00b7 Jardin de Corbi\u00e8res",prix:1900,tva:20,reg:"Languedoc"},
+    {id:"vin-terrasses-du-larzac-bio-le-mas-du-rollier",cat:"vins-rouges",nom:"Terrasses du Larzac, bio \u00b7 Le Mas du Rollier",prix:3300,tva:20,reg:"Languedoc"},
+    {id:"vin-minervois-chant-de-lune-biodynamie-chateau-d",cat:"vins-rouges",nom:"Minervois, Chant de Lune, biodynamie \u00b7 Ch\u00e2teau d\u2019Argens",prix:3700,tva:20,reg:"Languedoc"},
+    {id:"vin-cotes-de-gascogne-origin-colombelle",cat:"vins-blancs",nom:"C\u00f4tes de Gascogne, Origin \u00b7 Colombelle",prix:1700,tva:20,reg:"Sud-Ouest"},
+    {id:"vin-pacherenc-du-vic-bilh-moelleux-collection-pl",cat:"vins-blancs",nom:"Pacherenc du Vic-Bilh moelleux, Collection \u00b7 Plaimont",prix:4100,tva:20,reg:"Sud-Ouest"},
+    {id:"vin-madiran-maestria-plaimont",cat:"vins-rouges",nom:"Madiran, Maestria \u00b7 Plaimont",prix:2800,tva:20,reg:"Sud-Ouest"},
+    {id:"vin-rioja-garnacha-blanca-la-maldita",cat:"vins-blancs",nom:"Rioja, Garnacha blanca \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
+    {id:"vin-rioja-garnacha-la-maldita",cat:"vins-roses",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
+    {id:"vin-rioja-garnacha-la-malditax",cat:"vins-rouges",nom:"Rioja, Garnacha \u00b7 La Maldita",prix:3000,tva:20,reg:"Espagne"},
+    {id:"vin-haut-medoc-cru-bourgeois-chateau-lamothe-cis",cat:"vins-rouges",nom:"Haut-M\u00e9doc, Cru Bourgeois \u00b7 Ch\u00e2teau Lamothe-Cissac",prix:3800,tva:20,reg:"Bordeaux"},
+    {id:"vin-saint-emilion-2023-fortin-plaisance",cat:"vins-rouges",nom:"Saint-\u00c9milion, 2023 \u00b7 Fortin Plaisance",prix:4200,tva:20,reg:"Bordeaux"},
+    {id:"vin-cotes-de-bourg-ondulations",cat:"vins-rouges",nom:"C\u00f4tes de Bourg \u00b7 Ondulations",prix:4300,tva:20,reg:"Bordeaux"},
+    {id:"vin-pessac-leognan-2021-leo-colombier-brown",cat:"vins-rouges",nom:"Pessac-L\u00e9ognan, 2021 \u00b7 L\u00e9o Colombier Brown",prix:7000,tva:20,reg:"Bordeaux"},
+    {id:"vin-saint-estephe-heritage-de-le-boscq",cat:"vins-rouges",nom:"Saint-Est\u00e8phe \u00b7 H\u00e9ritage de Le Boscq",prix:7100,tva:20,reg:"Bordeaux"},
+    {id:"vin-pauillac-fleur-de-pedesclaux",cat:"vins-rouges",nom:"Pauillac \u00b7 Fleur de Pedesclaux",prix:8200,tva:20,reg:"Bordeaux"},
+    {id:"vin-margaux-2022-zede-de-labegorce",cat:"vins-rouges",nom:"Margaux, 2022 \u00b7 Z\u00e8de de Lab\u00e9gorce",prix:9000,tva:20,reg:"Bordeaux"},
+    {id:"vin-medoc-2018-goulee-by-cos-destournel",cat:"vins-rouges",nom:"M\u00e9doc, 2018 \u00b7 Goul\u00e9e by Cos d\u2019Estournel",prix:9600,tva:20,reg:"Bordeaux"},
+    {id:"vin-saint-julien-2023-laspirant-de-beychevelle",cat:"vins-rouges",nom:"Saint-Julien, 2023 \u00b7 L\u2019Aspirant de Beychevelle",prix:10800,tva:20,reg:"Bordeaux"},
+    {id:"vin-pomerol-second-vin-du-chateau-rouget-2016-ca",cat:"vins-rouges",nom:"Pomerol, second vin du Ch\u00e2teau Rouget, 2016 \u00b7 Carillon de Rouget",prix:11100,tva:20,reg:"Bordeaux"},
+    {id:"fc-chateau-bernateau-saint-emilion-grand-cru-2017",cat:"fins-cave",nom:"Ch\u00e2teau Bernateau \u00b7 Saint-\u00c9milion Grand Cru \u00b7 2017",prix:3900,ancien:5500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-de-saint-pey-saint-emilion-grand-cru-2015",cat:"fins-cave",nom:"Ch\u00e2teau de Saint-Pey \u00b7 Saint-\u00c9milion Grand Cru \u00b7 2015",prix:3900,ancien:5500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-de-saint-pey-saint-emilion-grand-cru-2019",cat:"fins-cave",nom:"Ch\u00e2teau de Saint-Pey \u00b7 Saint-\u00c9milion Grand Cru \u00b7 2019",prix:3600,ancien:5200,stock0:3,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-du-ravier-lalande-de-pomerol-2010",cat:"fins-cave",nom:"Ch\u00e2teau du Ravier \u00b7 Lalande-de-Pomerol \u00b7 2010",prix:3100,ancien:4500,stock0:6,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-les-gazelles-lalande-de-pomerol-2022",cat:"fins-cave",nom:"Ch\u00e2teau les Gazelles \u00b7 Lalande-de-Pomerol \u00b7 2022",prix:2700,ancien:3800,stock0:6,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-la-renolle-lalande-de-pomerol-2003",cat:"fins-cave",nom:"Ch\u00e2teau La Renolle \u00b7 Lalande-de-Pomerol \u00b7 2003",prix:3900,ancien:5500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-la-renolle-lalande-de-pomerol-2011",cat:"fins-cave",nom:"Ch\u00e2teau La Renolle \u00b7 Lalande-de-Pomerol \u00b7 2011",prix:2900,ancien:4200,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-la-renolle-lalande-de-pomerol-2018",cat:"fins-cave",nom:"Ch\u00e2teau La Renolle \u00b7 Lalande-de-Pomerol \u00b7 2018",prix:2900,ancien:4200,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-la-pointe-pomerol",cat:"fins-cave",nom:"La Pointe \u00b7 Pomerol",prix:6700,ancien:9500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-la-fleur-du-mayne-pomerol-2011",cat:"fins-cave",nom:"Ch\u00e2teau La Fleur du Mayne \u00b7 Pomerol \u00b7 2011",prix:5300,ancien:7500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-lenclos-pomerol-2014",cat:"fins-cave",nom:"Ch\u00e2teau L\u2019Enclos \u00b7 Pomerol \u00b7 2014",prix:6700,ancien:9500,stock0:5,tva:20,reg:"Bordeaux \u00b7 rive droite"},
+    {id:"fc-chateau-crabitey-graves-2008",cat:"fins-cave",nom:"Ch\u00e2teau Crabitey \u00b7 Graves \u00b7 2008",prix:3100,ancien:4500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-crabitey-graves-2014",cat:"fins-cave",nom:"Ch\u00e2teau Crabitey \u00b7 Graves \u00b7 2014",prix:2800,ancien:4000,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-de-gaillat-graves-2009",cat:"fins-cave",nom:"Ch\u00e2teau de Gaillat \u00b7 Graves \u00b7 2009",prix:3100,ancien:4500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-dourthe-n1-graves-2022",cat:"fins-cave",nom:"Dourthe N\u00b01 \u00b7 Graves \u00b7 2022",prix:2500,ancien:3500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-haut-lagrange-pessac-leognan-2010",cat:"fins-cave",nom:"Ch\u00e2teau Haut Lagrange \u00b7 Pessac-L\u00e9ognan \u00b7 2010",prix:4200,ancien:6000,stock0:4,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-haut-lagrange-pessac-leognan-2012",cat:"fins-cave",nom:"Ch\u00e2teau Haut Lagrange \u00b7 Pessac-L\u00e9ognan \u00b7 2012",prix:3900,ancien:5500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-haut-lagrange-pessac-leognan-2019",cat:"fins-cave",nom:"Ch\u00e2teau Haut Lagrange \u00b7 Pessac-L\u00e9ognan \u00b7 2019",prix:3900,ancien:5500,stock0:4,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-de-la-marque-haut-medoc-2010",cat:"fins-cave",nom:"Ch\u00e2teau de la Marque \u00b7 Haut-M\u00e9doc \u00b7 2010",prix:3100,ancien:4500,stock0:3,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-de-la-marque-haut-medoc-2014",cat:"fins-cave",nom:"Ch\u00e2teau de la Marque \u00b7 Haut-M\u00e9doc \u00b7 2014",prix:2800,ancien:4000,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-de-la-marque-haut-medoc-2015",cat:"fins-cave",nom:"Ch\u00e2teau de la Marque \u00b7 Haut-M\u00e9doc \u00b7 2015",prix:2900,ancien:4200,stock0:7,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-maison-sichel-margaux-2018",cat:"fins-cave",nom:"Maison Sichel \u00b7 Margaux \u00b7 2018",prix:4100,ancien:5800,stock0:6,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-la-reserve-dangludet-margaux-2016",cat:"fins-cave",nom:"La R\u00e9serve d\u2019Angludet \u00b7 Margaux \u00b7 2016",prix:4600,ancien:6500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-du-glana-saint-julien-2015",cat:"fins-cave",nom:"Ch\u00e2teau du Glana \u00b7 Saint-Julien \u00b7 2015",prix:5300,ancien:7500,stock0:4,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-pedesclaux-pauillac-2011",cat:"fins-cave",nom:"Ch\u00e2teau Pedesclaux \u00b7 Pauillac \u00b7 2011",prix:7400,ancien:10500,stock0:2,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-baron-nathaniel-pauillac-2018",cat:"fins-cave",nom:"Baron Nathaniel \u00b7 Pauillac \u00b7 2018",prix:5900,ancien:8500,stock0:9,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-lilian-ladouys-saint-estephe-2015",cat:"fins-cave",nom:"Ch\u00e2teau Lilian Ladouys \u00b7 Saint-Est\u00e8phe \u00b7 2015",prix:5300,ancien:7500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-chateau-tronquoy-lalande-saint-estephe-2018",cat:"fins-cave",nom:"Ch\u00e2teau Tronquoy-Lalande \u00b7 Saint-Est\u00e8phe \u00b7 2018",prix:6700,ancien:9500,stock0:1,tva:20,reg:"Bordeaux \u00b7 rive gauche"},
+    {id:"fc-bourgogne-pinot-noir-bourgogne-2023",cat:"fins-cave",nom:"Bourgogne Pinot Noir \u00b7 Bourgogne \u00b7 2023",prix:2100,ancien:3000,stock0:5,tva:20,reg:"Bourgogne"},
+    {id:"fc-maison-buissonnier-bourgogne-pinot-noir-2023",cat:"fins-cave",nom:"Maison Buissonnier \u00b7 Bourgogne Pinot Noir \u00b7 2023",prix:2700,ancien:3800,stock0:8,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-bourgogne-pinot-noir-2021",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Bourgogne Pinot Noir \u00b7 2021",prix:3100,ancien:4500,stock0:3,tva:20,reg:"Bourgogne"},
+    {id:"fc-nuiton-beaunoy-bourgogne-hautes-cotes-de-nuits-2024",cat:"fins-cave",nom:"Nuiton-Beaunoy \u00b7 Bourgogne Hautes-C\u00f4tes de Nuits \u00b7 2024",prix:2800,ancien:4000,stock0:3,tva:20,reg:"Bourgogne"},
+    {id:"fc-cote-de-nuits-villages-bourgogne-2015",cat:"fins-cave",nom:"C\u00f4te de Nuits-Villages \u00b7 Bourgogne \u00b7 2015",prix:4200,ancien:6000,stock0:4,tva:20,reg:"Bourgogne"},
+    {id:"fc-andre-goichot-savigny-les-beaune-2022",cat:"fins-cave",nom:"Andr\u00e9 Goichot \u00b7 Savigny-l\u00e8s-Beaune \u00b7 2022",prix:4200,ancien:6000,stock0:6,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-gevrey-chambertin-2018",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Gevrey-Chambertin \u00b7 2018",prix:7700,ancien:11000,stock0:2,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-gevrey-chambertin-2019",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Gevrey-Chambertin \u00b7 2019",prix:7700,ancien:11000,stock0:4,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-beaune-du-chateau-1er-cru-2018",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Beaune du Ch\u00e2teau 1er Cru \u00b7 2018",prix:6300,ancien:9000,stock0:1,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-beaune-greves-1er-cru-vigne-de-lenfant-jesus-201",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Beaune Gr\u00e8ves 1er Cru, Vigne de l\u2019Enfant J\u00e9sus \u00b7 2017",prix:12600,ancien:18000,stock0:4,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-clos-de-vougeot-grand-cru-2017",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Clos de Vougeot Grand Cru \u00b7 2017",prix:19600,ancien:28000,stock0:2,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-echezeaux-grand-cru-2017",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 \u00c9chezeaux Grand Cru \u00b7 2017",prix:22400,ancien:32000,stock0:3,tva:20,reg:"Bourgogne"},
+    {id:"fc-bouchard-pere-et-fils-beaune-du-chateau-1er-cru-blanc-2018",cat:"fins-cave",nom:"Bouchard P\u00e8re et Fils \u00b7 Beaune du Ch\u00e2teau 1er Cru blanc \u00b7 2018",prix:6300,ancien:9000,stock0:1,tva:20,reg:"Bourgogne"},
+    {id:"fc-maison-regnard-chablis-grand-cru-grand-regnard-2024",cat:"fins-cave",nom:"Maison Regnard \u00b7 Chablis Grand Cru, Grand Regnard \u00b7 2024",prix:10500,ancien:15000,stock0:2,tva:20,reg:"Bourgogne"},
+    {id:"fc-armand-dartois-cotes-du-rhone-2024",cat:"fins-cave",nom:"Armand Dartois \u00b7 C\u00f4tes du Rh\u00f4ne \u00b7 2024",prix:1800,ancien:2600,stock0:1,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"fc-e-guigal-cotes-du-rhone-2022",cat:"fins-cave",nom:"E. Guigal \u00b7 C\u00f4tes du Rh\u00f4ne \u00b7 2022",prix:2500,ancien:3500,stock0:2,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"fc-armand-dartois-cotes-du-rhone-villages-plan-de-dieu-2024",cat:"fins-cave",nom:"Armand Dartois \u00b7 C\u00f4tes du Rh\u00f4ne Villages Plan de Dieu \u00b7 2024",prix:2100,ancien:3000,stock0:4,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"fc-maison-ogier-saint-joseph-les-narelles-du-granit-2023",cat:"fins-cave",nom:"Maison Ogier \u00b7 Saint-Joseph, Les Narelles du Granit \u00b7 2023",prix:3900,ancien:5500,stock0:4,tva:20,reg:"Vall\u00e9e du Rh\u00f4ne"},
+    {id:"fc-charles-mignon-champagne",cat:"fins-cave",nom:"Charles Mignon \u00b7 Champagne",prix:4900,ancien:7000,stock0:6,tva:20,reg:"Champagne & autres horizons"},
+    {id:"fc-adrien-romet-brut",cat:"fins-cave",nom:"Adrien Romet \u00b7 Brut",prix:3500,ancien:5000,stock0:11,tva:20,reg:"Champagne & autres horizons"},
+    {id:"fc-henri-weber-alsace-gewurztraminer-2023",cat:"fins-cave",nom:"Henri Weber \u00b7 Alsace Gewurztraminer \u00b7 2023",prix:2400,ancien:3400,stock0:3,tva:20,reg:"Champagne & autres horizons"},
+    {id:"fc-domaine-des-feraud-cotes-de-provence-rose",cat:"fins-cave",nom:"Domaine des F\u00e9raud \u00b7 C\u00f4tes de Provence ros\u00e9",prix:2200,ancien:3200,stock0:4,tva:20,reg:"Champagne & autres horizons"},
+    {id:"fc-marques-de-riscal-rioja",cat:"fins-cave",nom:"Marqu\u00e9s de Riscal \u00b7 Rioja",prix:2700,ancien:3800,stock0:6,tva:20,reg:"Champagne & autres horizons"}
+  ]
 };
-var VERSION='2026-10-09 a';
+var VERSION='2026-10-15 a';
+var CARTE_VER='2026-10-15';CARTE_ORIGINE.ver=CARTE_VER;
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
 /* ================= OUTILS ================= */
@@ -470,23 +561,18 @@ function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
 var DEVICE=uid();
 
 /* ================= DONNÉES ================= */
-var data={ready:false,err:null,online:null,tables:{},config:null,jours:{}};
+var data={stock:{},ready:false,err:null,online:null,tables:{},config:null,jours:{}};
 var ui={ferm:{compte:'',confirm:false},fermDay:null,view:'salle',cur:null,cat:null,sheet:null,showTicket:false,pay:{montant:'',parts:1},rendu:0,recu:null,recuFrom:'salle',jday:dayKey(),reg:null,flash:null,busy:false};
 
 var _cfgSrc=null,_cfg=null;
+/* La carte d'origine fait foi à chaque nouvelle version de la carte ; ensuite, les modifications faites dans Réglages sont conservées. */
 function fusionCarte(k){
-  if(!k)return CARTE_ORIGINE;
-  var retir=['digestifs','cafes'];
-  var sup=toArr(k.supprimes),ids={},cids={},orig={};CARTE_ORIGINE.cats.forEach(function(c){orig[c.id]=c});
-  var out={cats:k.cats.filter(function(c){return retir.indexOf(c.id)<0}).map(function(c){return orig[c.id]||c}),items:k.items.filter(function(i){var x=String(i.id);return x.indexOf('bo-')!==0&&x.indexOf('bs-')!==0}),supprimes:sup};
-  out.items=out.items.map(function(i){
-    if(i.id!=='fo-gourmande'||!i.formule)return i;
-    var j=clone(i);j.formule=toArr(j.formule).map(function(g){g=clone(g);g.choix=toArr(g.choix).map(function(c){return c==='Terrine de campagne'?'Foie gras':c});return g});return j;
-  });
-  out.items.forEach(function(i){ids[i.id]=1});out.cats.forEach(function(c){cids[c.id]=1});
-  CARTE_ORIGINE.cats.forEach(function(c,ix){if(!cids[c.id]){out.cats.splice(Math.min(ix,out.cats.length),0,c);cids[c.id]=1}});
-  CARTE_ORIGINE.items.forEach(function(i){if(!ids[i.id]&&sup.indexOf(i.id)<0)out.items.push(i)});
-  return out;
+  if(!k||!Array.isArray(k.cats)||!Array.isArray(k.items))return CARTE_ORIGINE;
+  var aJour=k.ver===CARTE_VER,sup=aJour?toArr(k.supprimes):[],ids={};
+  var items=aJour?k.items.slice():k.items.filter(function(i){return String(i.id).indexOf('x-')===0});
+  items.forEach(function(i){ids[i.id]=1});
+  CARTE_ORIGINE.items.forEach(function(i){if(!ids[i.id]&&sup.indexOf(i.id)<0)items.push(i)});
+  return {ver:CARTE_VER,cats:CARTE_ORIGINE.cats,items:items,supprimes:sup};
 }
 function cfg(){
   if(_cfg&&_cfgSrc===data.config)return _cfg;
@@ -500,6 +586,15 @@ function isGroup(id){return cfg().carte.cats.some(function(c){return c.parent===
 function catPath(id){var p=[],c=catOf(id),g=0;while(c&&g<8){p.unshift(c.id);c=c.parent?catOf(c.parent):null;g++}return p}
 function catLabel(id){return catPath(id).map(function(x){return catOf(x).nom}).join(' \u203a ')}
 function nbDans(id){var k=cfg().carte;return k.items.filter(function(i){return catPath(i.cat).indexOf(id)>=0}).length}
+function estStock(it){return !!it&&it.stock0!=null}
+function stockDe(id){
+  var it=itemOf(id),n=it&&it.stock0!=null?it.stock0:0,mv=data.stock&&data.stock[id];
+  if(mv&&typeof mv==='object')Object.keys(mv).sort().forEach(function(k){var e=mv[k];if(!e)return;if(e.k==='set')n=+e.n||0;else n+=(+e.n||0)});
+  return n;
+}
+function reserveDe(id,sauf){var n=0;Object.keys(data.tables).forEach(function(k){(data.tables[k].lines||[]).forEach(function(l){if(l.item===id&&l.id!==sauf)n+=l.qty})});return n}
+function dispoDe(id,sauf){return stockDe(id)-reserveDe(id,sauf)}
+function stockTxt(n){return n<=0?'Épuisé':(n===1?'Dernière bouteille':'Plus que '+n+' bouteilles')}
 function itemOf(id){var it=cfg().carte.items;for(var i=0;i<it.length;i++)if(it[i].id===id)return it[i];return null}
 
 /* ---- Firebase (REST + flux temps réel) ---- */
@@ -553,6 +648,7 @@ var Store={
     var self=this,got={t:false,c:false};
     this.open('tables','tables',function(v){self.mir.tables=v;got.t=true;if(got.c)data.ready=true;self.derive()});
     this.open('config','config',function(v){self.mir.config=v;got.c=true;if(got.t)data.ready=true;self.derive()});
+    this.open('stock','stock',function(v){data.stock=v||{};render()});
     this.watchDay(addDays(dayKey(),-1));this.watchDay(dayKey());
     setTimeout(function(){if(!data.ready){data.err='connexion';data.ready=true;render()}},12000);
   },
@@ -606,6 +702,7 @@ var Store={
     this.open('j:'+day,'jours/'+day,function(v){data.jours[day]=normJour(day,v);render()});
   },
   ecrire:async function(path,body){var r=await fetch(this.url(path,'?x-http-method-override=PUT'),{method:'POST',body:JSON.stringify(body)});if(!r.ok)throw new Error(String(r.status))},
+  mouvement:async function(id,mv){var r=await fetch(this.url('stock/'+id),{method:'POST',body:JSON.stringify(mv)});if(!r.ok)throw new Error(String(r.status))},
   saveTable:function(t){this.put('tables/'+t.id,clone(t))},
   deleteTable:function(id){this.put('tables/'+id,null)},
   saveConfig:function(c){this.put('config',clone(c))},
@@ -808,6 +905,7 @@ function vCommande(){
     h+=libre+'</div>';
   }else{
     var its=c.carte.items.filter(function(i){return i.cat===ui.cat}),regs=[];
+    if(its.some(estStock))h+='<div class="stk-bar"><span class="small muted">'+its.filter(estStock).reduce(function(a,i){return a+Math.max(0,stockDe(i.id))},0)+' bouteilles en cave \u00b7 d\u00e9compt\u00e9es \u00e0 l\u2019encaissement</span><button class="btn ghost" data-act="sheetStock">Modifier le stock</button></div>';
     its.forEach(function(it){var r=it.reg||'';if(regs.indexOf(r)<0)regs.push(r)});
     regs.forEach(function(r,ri){
       if(r)h+='<div class="reg-t">'+esc(r)+'</div>';
@@ -815,6 +913,7 @@ function vCommande(){
       its.filter(function(it){return (it.reg||'')===r}).forEach(function(it){
         var p=it.variantes?'d\u00e8s '+eur(Math.min.apply(null,it.variantes.map(function(v){return v.prix}))):eur(it.prix);
         var pn=String(it.nom).split(' \u00b7 ');
+        if(estStock(it)){var dn=dispoDe(it.id);h+='<button class="item stk'+(dn<=0?' epuise':'')+(ui.flash===it.id?' added':'')+'" data-act="item" data-id="'+it.id+'" '+(dn<=0?'disabled':'')+'><span class="nm">'+esc(pn[0])+'</span>'+(pn.length>1?'<span class="it-sub">'+esc(pn.slice(1).join(' \u00b7 '))+'</span>':'')+'<span class="stk-t">'+stockTxt(dn)+'</span><span class="pr"><b class="num">'+eur(it.prix)+'</b><span><s>'+(it.ancien?eur(it.ancien):'')+'</s></span></span></button>';return}
         h+='<button class="item '+(ui.flash===it.id?'added':'')+'" data-act="item" data-id="'+it.id+'"><span class="nm">'+esc(pn[0])+'</span>'+(pn.length>1?'<span class="it-sub">'+esc(pn.slice(1).join(' \u00b7 '))+'</span>':'')+'<span class="pr"><b class="num">'+p+'</b><span>'+esc(it.unite||'')+'</span></span></button>';
       });
       if(ri===regs.length-1)h+=libre;
@@ -1072,6 +1171,7 @@ function vReglages(){
     '<div class="field"><label for="f-adr">Adresse sur le ticket</label><input class="inp" id="f-adr" data-bind="reg.adresse" value="'+esc(ui.reg.adresse)+'" placeholder="Adresse, t\u00e9l\u00e9phone, SIRET"></div>'+
     '<div class="field"><label for="f-nb">Nombre de tables en salle</label><input class="inp num" id="f-nb" inputmode="numeric" data-bind="reg.nb" value="'+esc(ui.reg.nb)+'"></div>'+
     '<button class="btn pri" data-act="saveReg">Enregistrer</button></div>';
+  h+='<h2>Fins de cave</h2><div class="card"><div class="row" style="padding:0"><span>'+cfg().carte.items.filter(estStock).reduce(function(a,i){return a+Math.max(0,stockDe(i.id))},0)+' bouteilles en cave</span><button class="btn" data-act="sheetStock">Modifier le stock</button></div></div>';
   h+='<h2>Carte</h2><p class="muted small">Touchez un article pour changer son prix ou son taux de TVA. Pensez \u00e0 ajouter vos boissons (TVA 20\u00a0% pour l\u2019alcool).</p><div class="card carte-edit">';
   c.carte.cats.filter(function(ct){return !isGroup(ct.id)}).forEach(function(ct){
     h+='<div class="ce-cat"><b>'+esc(catLabel(ct.id))+'</b></div>';
@@ -1168,6 +1268,17 @@ function vSheet(){
   else if(s.type==='partRecu'){
     h='<h3>R\u00e8glement enregistr\u00e9</h3><div class="sub">'+(s.pr.rendu?'Monnaie \u00e0 rendre : '+eur(s.pr.rendu):'Imprimez le ticket de cette personne si besoin.')+'</div>'+partRecuHtml(s.pr)+'<div class="foot"><button class="btn ghost" data-act="imprimer">Imprimer</button><button class="btn pri" data-act="closeSheet">Continuer</button></div>';
   }
+  else if(s.type==='stock'){
+    var its=cfg().carte.items.filter(estStock),rg='';
+    h='<h3>Stock des fins de cave</h3><div class="sub">Nombre de bouteilles en cave. Les bouteilles des tables en cours sont d\u00e9compt\u00e9es \u00e0 l\u2019encaissement.</div>';
+    its.forEach(function(it){
+      if(it.reg!==rg){rg=it.reg;h+='<div class="grp-t">'+esc(rg)+'</div>'}
+      var pn=String(it.nom).split(' \u00b7 '),r=reserveDe(it.id);
+      h+='<div class="stk-row"><span><b>'+esc(pn[0])+'</b><span class="small muted"> '+esc(pn.slice(1).join(' \u00b7 '))+(r?' \u00b7 '+r+' en commande':'')+'</span></span><span class="stk-ctl"><button class="x" data-act="stkStep" data-id="'+it.id+'" data-d="-1">\u2212</button><input class="inp num" inputmode="numeric" autocomplete="off" data-bind="sheet.v.'+it.id+'" value="'+esc(s.v[it.id])+'"><button class="x" data-act="stkStep" data-id="'+it.id+'" data-d="1">+</button></span></div>';
+    });
+    if(s.err)h+='<div class="confirm">'+esc(s.err)+'</div>';
+    h+='<div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn pri" data-act="stkSave" '+(s.busy?'disabled':'')+'>'+(s.busy?'Enregistrement\u2026':'Enregistrer')+'</button></div>';
+  }
   else if(s.type==='resetCarte'){
     h='<h3>Carte d\u2019origine</h3><div class="confirm">Toutes vos modifications de la carte (prix, boissons ajout\u00e9es) seront perdues.</div><div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn warn" data-act="resetCarte">R\u00e9tablir</button></div>';
   }
@@ -1193,6 +1304,7 @@ function openTable(id,couverts){
 function goCommande(id){ui.cur=id;ui.view='commande';ui.showTicket=false;ui.sheet=null;ui.pay={montant:'',parts:1};ui.rendu=0;render()}
 function addLine(it,o){
   var t=editT();if(!t)return;
+  if(estStock(it)&&dispoDe(it.id)<(o.qty||1)){toast(dispoDe(it.id)<=0?'Cette bouteille n\u2019est plus en stock':'Il ne reste que '+dispoDe(it.id)+' bouteille(s)');return}
   var ct=catOf(it.cat);
   var line={id:uid(),item:it.id,nom:it.nom,detail:o.detail||'',prix:o.prix,qty:o.qty||1,note:o.note||'',tva:it.tva||10,etat:'attente',cuisine:!(ct&&ct.horsCuisine)};
   var same=t.lines.filter(function(l){return l.etat==='attente'&&l.item===it.id&&l.detail===line.detail&&!l.note&&!line.note&&l.prix===line.prix&&!l.offert})[0];
@@ -1266,7 +1378,7 @@ var A={
   lDel:function(){ui.sheet.confirm=true;render()},
   lDelNo:function(){ui.sheet.confirm=false;render()},
   lDelYes:function(){var t=editT();if(!t)return;var id=ui.sheet.id;t.lines=t.lines.filter(function(l){return l.id!==id});ui.sheet=null;Store.saveTable(t)},
-  lSave:function(){var t=editT();if(!t)return;var s=ui.sheet;t.lines.forEach(function(l){if(l.id===s.id){l.qty=s.qty;l.note=(s.note||'').trim();l.offert=s.offert}});ui.sheet=null;Store.saveTable(t)},
+  lSave:function(){var t=editT();if(!t)return;var s=ui.sheet;var lo=t.lines.filter(function(l){return l.id===s.id})[0];if(lo&&estStock(itemOf(lo.item))&&s.qty>lo.qty&&dispoDe(lo.item,lo.id)<s.qty){toast('Stock insuffisant : '+Math.max(0,dispoDe(lo.item,lo.id))+' bouteille(s) disponible(s)');return}t.lines.forEach(function(l){if(l.id===s.id){l.qty=s.qty;l.note=(s.note||'').trim();l.offert=s.offert}});ui.sheet=null;Store.saveTable(t)},
   showTicket:function(){ui.showTicket=true;render()},
   servir:function(){var t=editT();if(!t)return;var now=Date.now();t.lines.forEach(function(l){if(l.etat==='pret'&&l.cuisine!==false){l.etat='servi';l.ts=now}});Store.saveTable(t)},
   hideTicket:function(){ui.showTicket=false;render()},
@@ -1316,6 +1428,9 @@ var A={
     try{
       var sa=svcActif();if(sa)tk.service=sa.key;
       var saved=await Store.appendTicket(sa?sa.day:dayKey(),tk);
+      var ventes={};t.lines.forEach(function(l){if(estStock(itemOf(l.item)))ventes[l.item]=(ventes[l.item]||0)+l.qty});
+      var ko=0;for(var vid in ventes){try{await Store.mouvement(vid,{k:'vente',n:-ventes[vid],tk:saved.id||tk.id,t:Date.now()})}catch(e){ko++}}
+      if(ko)toast('Stock des fins de cave non mis \u00e0 jour : corrigez-le dans \u00ab Modifier le stock \u00bb');
       var id=t.id;ui.recu=saved;ui.recuFrom='salle';ui.view='recu';ui.cur=null;ui.busy=false;
       Store.deleteTable(id);
     }catch(e){ui.busy=false;toast('Cl\u00f4ture impossible pour le moment, r\u00e9essayez');render()}
@@ -1420,6 +1535,16 @@ var A={
   eDelYes:function(){var id=ui.sheet.id,carte=clone(cfg().carte);carte.items=carte.items.filter(function(i){return i.id!==id});carte.supprimes=(carte.supprimes||[]).concat([id]);var c=clone(data.config||{});c.carte=carte;ui.sheet=null;Store.saveConfig(c)},
   sheetResetCarte:function(){ui.sheet={type:'resetCarte'};render()},
   resetCarte:function(){var c=clone(data.config||{});delete c.carte;ui.sheet=null;Store.saveConfig(c);toast('Carte d\u2019origine r\u00e9tablie')},
+  sheetStock:function(){var v={};cfg().carte.items.filter(estStock).forEach(function(it){v[it.id]=String(Math.max(0,stockDe(it.id)))});ui.sheet={type:'stock',v:v,err:'',busy:false};render()},
+  stkStep:function(d){var s=ui.sheet,n=parseInt(s.v[d.id],10);if(!(n>=0))n=0;s.v[d.id]=String(Math.max(0,n+parseInt(d.d,10)));render()},
+  stkSave:async function(){
+    var s=ui.sheet,ch=[];
+    for(var id in s.v){var n=parseInt(String(s.v[id]).trim(),10);if(!(n>=0&&n<=9999)){s.err='Nombre de bouteilles invalide.';render();return}if(n!==Math.max(0,stockDe(id)))ch.push([id,n])}
+    if(!ch.length){ui.sheet=null;render();return}
+    s.busy=true;s.err='';render();
+    try{for(var i=0;i<ch.length;i++)await Store.mouvement(ch[i][0],{k:'set',n:ch[i][1],t:Date.now()});ui.sheet=null;toast('Stock mis \u00e0 jour ('+ch.length+' vin'+(ch.length>1?'s':'')+')');render()}
+    catch(e){s.busy=false;s.err='Enregistrement impossible, v\u00e9rifiez la connexion.';render()}
+  },
   closeSheet:function(){ui.sheet=null;render()}
 };
 
