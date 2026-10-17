@@ -546,7 +546,7 @@ var CARTE_ORIGINE={
     {id:"fc-marques-de-riscal-rioja",cat:"fins-cave",nom:"Marqu\u00e9s de Riscal \u00b7 Rioja",prix:2700,ancien:3800,stock0:6,tva:20,reg:"Champagne & autres horizons"}
   ]
 };
-var VERSION='2026-10-15 b';
+var VERSION='2026-10-18 a';
 var CARTE_VER='2026-10-15';CARTE_ORIGINE.ver=CARTE_VER;
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
@@ -558,7 +558,9 @@ function eur(c){c=Math.round(c||0);return (c<0?'\u2212':'')+(Math.abs(c)/100).to
 function csvNum(c){return ((c||0)/100).toFixed(2).replace('.',',')}
 function parseMoney(s){if(s==null)return null;s=String(s).replace(/\s/g,'').replace('\u20ac','').replace(',','.');if(s==='')return null;var v=parseFloat(s);if(!isFinite(v))return null;return Math.round(v*100)}
 function pad(n){return (n<10?'0':'')+n}
-function dayKey(d){d=d||new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+/* Journée commerciale : ce qui est encaissé entre minuit et 5 h compte pour la veille */
+var COUPURE=5;
+function dayKey(d){d=d||new Date(Date.now()-COUPURE*3600000);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function addDays(k,n){var d=new Date(k+'T12:00:00');d.setDate(d.getDate()+n);return dayKey(d)}
 function dayLabel(k){var d=new Date(k+'T12:00:00');var s=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});return s.charAt(0).toUpperCase()+s.slice(1)}
 function hhmm(t){var d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())}
@@ -640,7 +642,7 @@ function normConfig(c){
   return c;
 }
 function normJour(day,v){
-  v=v||{};var tk=v.tickets||{},keys=Object.keys(tk).sort();
+  v=v||{};var tk=v.tickets||{},keys=Object.keys(tk).sort().filter(function(k){return tk[k]&&!tk[k].deplace});
   var sv=v.services||{},sk=Object.keys(sv).sort(),services=[];
   if(v.ouverture||v.cloture)services.push({key:'jour',ouverture:v.ouverture||null,cloture:v.cloture||null,legacy:true});
   sk.forEach(function(k){var x=sv[k]||{};services.push({key:k,ouverture:x.ouverture||null,cloture:x.cloture||null})});
@@ -1156,9 +1158,16 @@ function jourStats(tks){
   });
   return s;
 }
+function calDay(t){var d=new Date(t);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function ticketsDeNuit(k){return jourTickets(k).filter(function(t){var d=new Date(t.ferme);return calDay(t.ferme)===k&&d.getHours()<COUPURE})}
 function vJournal(){
-  var k=ui.jday,tks=jourTickets(k),s=jourStats(tks);
-  var h='<div class="wrap"><div class="jnav"><button class="btn ghost" data-act="jday" data-d="-1">Veille</button><span class="d">'+dayLabel(k)+'</span><button class="btn ghost" data-act="jday" data-d="1" '+(k>=dayKey()?'disabled':'')+'>Lendemain</button><button class="btn" data-act="copier" '+(tks.length?'':'disabled')+' style="margin-left:auto">Copier pour Excel</button></div>';
+  var k=ui.jday,tks=jourTickets(k),s=jourStats(tks),nuit=ticketsDeNuit(k);
+  var h='<div class="wrap"><div class="jnav"><button class="btn ghost" data-act="jday" data-d="-1">Veille</button><span class="d">'+dayLabel(k)+'</span><button class="btn ghost" data-act="jday" data-d="1" '+(k>=calDay(Date.now())?'disabled':'')+'>Lendemain</button><button class="btn" data-act="copier" '+(tks.length?'':'disabled')+' style="margin-left:auto">Copier pour Excel</button></div>';
+  if(nuit.length){
+    var mt=nuit.reduce(function(a,t){return a+t.total},0);
+    h+='<div class="daybar off" style="margin-top:14px"><span>'+nuit.length+' ticket'+(nuit.length>1?'s':'')+' encaissé'+(nuit.length>1?'s':'')+' après minuit ('+eur(mt)+') appartien'+(nuit.length>1?'nent':'t')+' au service de la veille.</span>'+
+      (ui.nuitOk===k?'<span class="db-btns"><button class="btn ghost" data-act="nuitNon">Annuler</button><button class="btn pri" data-act="nuitOui" '+(ui.busy?'disabled':'')+'>'+(ui.busy?'Déplacement…':'Confirmer')+'</button></span>':'<button class="btn pri" data-act="nuitAsk">Rattacher à la veille</button>')+'</div>';
+  }
   h+='<div class="stats" style="margin-top:14px"><div class="stat"><b class="num">'+eur(s.ca)+'</b><span>chiffre d\u2019affaires TTC</span></div><div class="stat"><b class="num">'+s.n+'</b><span>tickets</span></div><div class="stat"><b class="num">'+s.couv+'</b><span>couverts</span></div><div class="stat"><b class="num">'+eur(s.couv?Math.round(s.ca/s.couv):0)+'</b><span>moyenne par couvert</span></div></div>';
   h+='<div class="jgrid"><div class="card"><b>R\u00e8glements</b>';
   MODES.forEach(function(m){h+='<div class="row"><span>'+m+'</span><span class="num">'+eur(s.modes[m]||0)+'</span></div>'});
@@ -1535,7 +1544,22 @@ var A={
     Store.saveTable(t);
   },
   kAll:function(d){var t=data.tables[d.t];if(!t)return;t=clone(t);var now=Date.now();t.lines.forEach(function(l){if(l.etat==='envoye'){l.etat='pret';l.tp=now}});Store.saveTable(t)},
-  jday:function(d){var k=addDays(ui.jday,parseInt(d.d,10));if(k>dayKey())return;ui.jday=k;Store.watchDay(k);render()},
+  nuitAsk:function(){ui.nuitOk=ui.jday;render()},
+  nuitNon:function(){ui.nuitOk=null;render()},
+  nuitOui:async function(){
+    var k=ui.jday,veille=addDays(k,-1),liste=ticketsDeNuit(k);if(!liste.length||ui.busy)return;
+    ui.busy=true;render();
+    var sv=null,ok=0;
+    try{var r=await fetch(Store.url('jours/'+veille+'/services','?shallow=true'));var o=await r.json();if(o){var ks=Object.keys(o).sort();sv=ks[ks.length-1]||null}}catch(e){}
+    for(var i=0;i<liste.length;i++){
+      var t=liste[i],c=clone(t);delete c.key;delete c.num;c.deplaceDe=k+'/'+t.key;if(sv)c.service=sv;else delete c.service;
+      try{await Store.appendTicket(veille,c);await Store.ecrire('jours/'+k+'/tickets/'+t.key+'/deplace',{vers:veille,t:Date.now()});ok++}catch(e){}
+    }
+    ui.busy=false;ui.nuitOk=null;Store.watchDay(veille);
+    toast(ok===liste.length?ok+' ticket'+(ok>1?'s':'')+' rattach\u00e9'+(ok>1?'s':'')+' au '+dayLabel(veille).toLowerCase():'D\u00e9placement incomplet ('+ok+'/'+liste.length+'), r\u00e9essayez');
+    render();
+  },
+  jday:function(d){var k=addDays(ui.jday,parseInt(d.d,10));if(k>calDay(Date.now()))return;ui.jday=k;Store.watchDay(k);render()},
   voirTicket:function(d){var tk=jourTickets(ui.jday)[parseInt(d.i,10)];if(!tk)return;ui.recu=tk;ui.recuFrom='journal';ui.view='recu';render()},
   copier:async function(){
     var k=ui.jday,tks=jourTickets(k);if(!tks.length)return;
@@ -1614,7 +1638,8 @@ document.addEventListener('input',function(e){
   if(el.dataset.live)render();
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ui.sheet){ui.sheet=null;render()}});
-setInterval(function(){if(!ui.sheet&&(ui.view==='salle'||ui.view==='cuisine'))render()},30000);
+var _jourVu=dayKey();
+setInterval(function(){var k=dayKey();if(k!==_jourVu){_jourVu=k;Store.watchDay(addDays(k,-1));Store.watchDay(k);if(ui.view!=='journal')ui.jday=k}if(!ui.sheet&&(ui.view==='salle'||ui.view==='cuisine'))render()},30000);
 Store.start();
 </script>
 </body>
