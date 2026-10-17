@@ -546,7 +546,7 @@ var CARTE_ORIGINE={
     {id:"fc-marques-de-riscal-rioja",cat:"fins-cave",nom:"Marqu\u00e9s de Riscal \u00b7 Rioja",prix:2700,ancien:3800,stock0:6,tva:20,reg:"Champagne & autres horizons"}
   ]
 };
-var VERSION='2026-10-18 a';
+var VERSION='2026-10-18 b';
 var CARTE_VER='2026-10-15';CARTE_ORIGINE.ver=CARTE_VER;
 var MODES=['Esp\u00e8ces','Carte bancaire','Ch\u00e8que','Ticket resto'];
 
@@ -965,7 +965,7 @@ function ticketPane(t){
   var nAtt=att.reduce(function(a,l){return a+l.qty},0);
   h+='<div class="tk-tot"><span>Total</span><b class="num">'+eur(total(t))+'</b></div><div class="tk-btns">'+
     '<button class="btn sage" data-act="envoyer" '+(nAtt?'':'disabled')+'>Envoyer'+(nAtt?' ('+nAtt+')':'')+'</button>'+
-    '<button class="btn pri" data-act="encaisser" '+(t.lines.length?'':'disabled')+'>Encaisser</button></div></div></aside>';
+    '<button class="btn pri" data-act="encaisser" '+(t.lines.length?'':'disabled')+'>Encaisser</button></div>'+(t.lines.length?'<button class="btn ghost block" style="margin-top:8px;min-height:40px" data-act="sheetAddition">Imprimer l\u2019addition</button>':'')+'</div></aside>';
   return h;
 }
 
@@ -999,7 +999,7 @@ function defAmount(t){var sc=selCalc(t);if(sc)return sc.tot;var r=reste(t);if(ui
 function vEncaisser(){
   var t=curT();if(!t)return '';
   var r=reste(t),rm=t.remise;
-  var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="commande">Commande</button><div class="ttl">Encaisser \u00b7 '+esc(t.label)+'</div></div><div class="wrap"><div class="pay"><div class="card">';
+  var h='<div class="cmd-head"><button class="btn back" data-act="nav" data-v="commande">Commande</button><div class="ttl">Encaisser \u00b7 '+esc(t.label)+'</div><button class="btn ghost" data-act="sheetAddition">Imprimer l\u2019addition</button></div><div class="wrap"><div class="pay"><div class="card">';
   h+='<div class="due"><div class="lbl">'+(r>0?'Reste \u00e0 payer':'R\u00e9gl\u00e9')+'</div><div class="big num">'+eur(Math.max(0,r))+'</div></div>';
   h+='<div class="row"><span>Sous-total</span><span class="num">'+eur(sousTotal(t))+'</span></div>';
   if(rm)h+='<div class="row"><span>Remise '+(rm.type==='pct'?rm.v+'\u00a0%':'')+'</span><span class="num">'+eur(-remiseM(t))+'</span></div>';
@@ -1096,6 +1096,22 @@ function partHtml(tk,r,sansDetail){
   if(r.remise)h+='<div class="r"><span>Sous-total</span><span>'+eur(r.sousTotal)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-r.remise)+'</span></div>';
   h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(r.total)+'</span></div>';
   if(r.tva.length){h+='<hr><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';r.tva.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});h+='</table>'}
+  h+='<hr><div class="c">Merci de votre visite</div></div>';
+  return h;
+}
+function additionHtml(t,sans){
+  var c=cfg(),st=sousTotal(t),rm=remiseM(t),tot=total(t),pa=paye(t);
+  var ls=t.lines.filter(function(l){return !l.incl});
+  var h='<div class="ticket"><div class="tn">'+esc(c.nom)+'</div>'+(c.adresse?'<div class="c small">'+esc(c.adresse)+'</div>':'')+'<hr>';
+  h+='<div class="c" style="font-weight:700">ADDITION</div><div class="r"><span>'+esc(t.label)+'</span><span>'+new Date().toLocaleDateString('fr-FR')+' '+hhmm(Date.now())+'</span></div>'+(t.couverts?'<div class="r"><span>'+t.couverts+' couvert'+(t.couverts>1?'s':'')+'</span></div>':'')+'<hr>';
+  if(sans)h+='<div class="r"><span>Repas et boissons</span><span>'+eur(st)+'</span></div>';
+  else ls.forEach(function(l){var d=l.fo?foDetail({qty:l.qty,fo:{g:l.fo.g.map(function(g){return {nom:g.nom,val:g.val!=null?g.val:(g.faits.length?null:'—'),faits:g.faits,reste:0}})}}):l.detail;h+='<div class="r"><span>'+l.qty+' '+esc(l.nom)+'</span><span>'+(l.offert?'offert':eur(l.prix*l.qty))+'</span></div>'+(d?'<div class="dd">'+esc(d)+'</div>':'')});
+  h+='<hr>';
+  if(rm)h+='<div class="r"><span>Sous-total</span><span>'+eur(st)+'</span></div><div class="r"><span>Remise</span><span>'+eur(-rm)+'</span></div>';
+  h+='<div class="r tot"><span>TOTAL TTC</span><span>'+eur(tot)+'</span></div>';
+  var tv=tvaDetail(ls,st,tot);
+  if(tv.length){h+='<hr><table><tr><th>TVA</th><th>HT</th><th>TVA</th><th>TTC</th></tr>';tv.forEach(function(x){h+='<tr><td>'+tauxTxt(x.taux)+'</td><td>'+eur(x.ht)+'</td><td>'+eur(x.tva)+'</td><td>'+eur(x.ttc)+'</td></tr>'});h+='</table>'}
+  if(pa)h+='<hr><div class="r"><span>Déjà réglé</span><span>'+eur(pa)+'</span></div><div class="r tot"><span>RESTE À PAYER</span><span>'+eur(Math.max(0,tot-pa))+'</span></div>';
   h+='<hr><div class="c">Merci de votre visite</div></div>';
   return h;
 }
@@ -1303,6 +1319,11 @@ function vSheet(){
       (s.reprise?'<p class="small muted" style="margin-top:-6px">Pr\u00e9rempli avec les esp\u00e8ces compt\u00e9es \u00e0 la derni\u00e8re cl\u00f4ture.</p>':'')+
       (s.err?'<div class="confirm">'+esc(s.err)+'</div>':'')+
       '<div class="foot"><button class="btn ghost" data-act="closeSheet">Annuler</button><button class="btn pri" data-act="ouvrir" '+(s.busy?'disabled':'')+'>'+(s.modif?'Enregistrer':'Ouvrir le service')+'</button></div>';
+  }
+  else if(s.type==='addition'){
+    var ta=curT();if(!ta){ui.sheet=null;return ''}
+    h='<h3>Addition</h3><div class="chips" style="margin-bottom:12px"><button class="chip '+(s.sans?'':'on')+'" data-act="addSans" data-v="0">D\u00e9taill\u00e9e</button><button class="chip '+(s.sans?'on':'')+'" data-act="addSans" data-v="1">Sans d\u00e9tail</button></div>'+additionHtml(ta,s.sans)+
+      '<div class="foot"><button class="btn ghost" data-act="closeSheet">Fermer</button><button class="btn pri" data-act="imprimer">Imprimer</button></div>';
   }
   else if(s.type==='partRecu'){
     h='<h3>R\u00e8glement enregistr\u00e9</h3><div class="sub">'+(s.pr.rendu?'Monnaie \u00e0 rendre : '+eur(s.pr.rendu):'Imprimez le ticket de cette personne si besoin.')+'</div>'+partRecuHtml(s.pr)+'<div class="foot"><button class="btn ghost" data-act="imprimer">Imprimer</button><button class="btn pri" data-act="closeSheet">Continuer</button></div>';
@@ -1537,6 +1558,8 @@ var A={
   splitReset:function(){var rv=ui.rv;rv.sel={};rv.done={};rv.part=1;render()},
   persoOn:function(){var tk=ui.recu;if(!tk)return;ui.perso={id:tk.id,nb:String(tk.couverts||1),montant:csvNum(tk.total)};render()},
   persoOff:function(){ui.perso=null;render()},
+  sheetAddition:function(){ui.showTicket=false;ui.sheet={type:'addition',sans:false};render()},
+  addSans:function(d){ui.sheet.sans=d.v==='1';render()},
   imprimer:function(){try{window.print()}catch(e){toast('Impression indisponible ici')}},
   kLine:function(d){
     var t=data.tables[d.t];if(!t)return;t=clone(t);
